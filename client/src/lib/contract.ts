@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import type { ExternalProvider } from "@ethersproject/providers"; // <-- important
+import type { ExternalProvider } from "@ethersproject/providers";
 
-import ExampleABI from "../../blockchain/build/contracts/Example.json"; // Adjust path
+import ExampleABI from "./contracts/Example.json";
 
 declare global {
   interface Window {
