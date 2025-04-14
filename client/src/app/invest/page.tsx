@@ -12,9 +12,9 @@ export default function Home() {
       alert("Contract not deployed on this network.");
       return;
     }
-    const tx = await exampleContract.invest({ value: ethers.utils.parseEther("1") });
+    const tx = await exampleContract.invest({ value: ethers.utils.parseEther("0.01") });
     await tx.wait();
-    alert("Invested 1 ETH");
+    alert("Invested 0.01 ETH");
   };
 
   const fetchOwnership = async () => {
