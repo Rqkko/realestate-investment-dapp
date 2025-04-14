@@ -4,21 +4,34 @@ import type { ExternalProvider } from "@ethersproject/providers";
 
 import ExampleABI from "./contracts/Example.json";
 
+interface NetworkMap {
+  [key: string]: {
+    address: string;
+  };
+}
+
 declare global {
   interface Window {
     ethereum?: MetaMaskInpageProvider;
   }
 }
 
-const CONTRACT_ADDRESS = "YOUR_DEPLOYED_CONTRACT_ADDRESS";
+let provider: ethers.providers.Web3Provider | undefined;
+let account: string | undefined;
+let exampleContract: ethers.Contract | undefined;
 
-export const getContract = async () => {
-  if (!window.ethereum) throw new Error("No wallet found");
-  await window.ethereum.request({ method: "eth_requestAccounts" });
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum as unknown as ExternalProvider);
+if (typeof window !== "undefined") {
+  provider = new ethers.providers.Web3Provider(window.ethereum as unknown as ExternalProvider);
   const signer = provider.getSigner();
+  
+  const network = await provider.getNetwork();
+  const networkId = String(network.chainId);
+  
+  account = (await provider.send("eth_requestAccounts", []))[0];
+  
+  
+  const exampleContractAddress = (ExampleABI.networks as NetworkMap)[networkId].address;
+  exampleContract = new ethers.Contract(exampleContractAddress, ExampleABI.abi, signer);
+}
 
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, ExampleABI.abi, signer);
-  return contract;
-};
+export { provider, account, exampleContract };

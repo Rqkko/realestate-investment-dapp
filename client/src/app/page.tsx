@@ -11,7 +11,7 @@ export default function GoButton() {
   return (
     <div className="flex flex-col justify-center items-center bg-gray-200 p-6 min-h-screen text-center">
       <h1 className="mb-4 font-semibold text-4xl text-gray-800">
-        Welcome to Real Estate Investment DApp
+        Welcome to DeProp!
       </h1>
       <p className="mb-6 text-gray-600 text-xl">
         Start investing in exciting real estate projects today.
