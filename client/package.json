@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup-contracts": "cd ../blockchain && truffle migrate && cd ../client && cp -r ../blockchain/build/contracts ./src/lib/"
   },
   "dependencies": {
     "ethers": "^5.8.0",
