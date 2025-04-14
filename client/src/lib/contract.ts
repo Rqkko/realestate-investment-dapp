@@ -29,8 +29,13 @@ if (typeof window !== "undefined") {
   
   account = (await provider.send("eth_requestAccounts", []))[0];
   
-  
-  const exampleContractAddress = (ExampleABI.networks as NetworkMap)[networkId].address;
+  let exampleContractAddress: string;
+  try {
+    exampleContractAddress = (ExampleABI.networks as NetworkMap)[networkId].address;
+  } catch {
+    console.log("Invalid networkId, using default contract address (1337)");
+    exampleContractAddress = (ExampleABI.networks as NetworkMap)["1337"].address;
+  }
   exampleContract = new ethers.Contract(exampleContractAddress, ExampleABI.abi, signer);
 }
 
