@@ -15,4 +15,4 @@ contract Example {
     function getOwnership(address user) public view returns (uint256) {
         return ownership[user];
     }
-} 
+}
