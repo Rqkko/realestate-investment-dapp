@@ -29,7 +29,22 @@ If done correctly, you should see:
 - RPC server is `HTTP://127.0.0.1:7545`
 
 ### 3. Setup MetaMask
-TODO
+Install the MetaMask extension on your browser and create a new wallet
+
+Click on `Add a Custom Network` and enter the following details:
+- Network Name: Ganache (or any name you prefer)
+- Default RPC URL: HTTP://127.0.0.1:7545
+- Chain ID: 1337
+
+Click `Save`
+
+Select the Ganache network that you just created
+
+`Add Account` and import the first account from Ganache
+- Import using `Private Key`
+- To obtain the private key, click the key icon next to the first account, reveal the keys, and copy the private key.
+
+Make sure to select the account after import
 
 ### 4. Continue setup on [Backend Development](#setup-for-backend-development) or [Frontend Development](#setup-for-frontend-development) section
 
