@@ -1,0 +1,15 @@
+# Truffle/Blockchain
+blockchain/bin/
+blockchain/lib/
+blockchain/build/
+blockchain/.cache/
+
+# Node.js
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# System
+.DS_Store
