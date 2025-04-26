@@ -40,7 +40,6 @@ export default function DashboardPage() {
               <TabsList>
                 <TabsTrigger value="investments">Investments</TabsTrigger>
                 <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
-                <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
               </TabsList>
               <TabsContent value="investments" className="space-y-4">
                 <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
@@ -153,58 +152,6 @@ export default function DashboardPage() {
                     </CardFooter>
                   </Card>
                 </div>
-              </TabsContent>
-              <TabsContent value="portfolio" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Portfolio Overview</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-8">
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="bg-primary rounded-full w-4 h-4" />
-                            <span className="font-medium text-sm">Residential</span>
-                          </div>
-                          <span className="font-medium text-sm">1,800 DP (72%)</span>
-                        </div>
-                        <Progress value={72} className="h-2" />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="bg-blue-500 rounded-full w-4 h-4" />
-                            <span className="font-medium text-sm">Commercial</span>
-                          </div>
-                          <span className="font-medium text-sm">500 DP (20%)</span>
-                        </div>
-                        <Progress value={20} className="bg-blue-100 h-2" />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="bg-green-500 rounded-full w-4 h-4" />
-                            <span className="font-medium text-sm">Industrial</span>
-                          </div>
-                          <span className="font-medium text-sm">200 DP (8%)</span>
-                        </div>
-                        <Progress value={8} className="bg-green-100 h-2" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Total Returns</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center">
-                      <div className="font-bold text-4xl text-green-600">+1,030 DP</div>
-                      <p className="text-muted-foreground text-sm">41.2% return on investment</p>
-                    </div>
-                  </CardContent>
-                </Card>
               </TabsContent>
             </Tabs>
           </div>
