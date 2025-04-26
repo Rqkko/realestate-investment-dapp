@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import Image from "next/image"
 
 interface ProjectCardProps {
   title: string
@@ -20,7 +21,7 @@ export function ProjectCard({ title, location, invested, earnings, progress, ima
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0" />
-          <img src={image || "/placeholder.svg"} alt={title} className="w-full h-full object-cover" />
+          <Image src={image || "/placeholder_realEstate.jpg"} alt={title} width={500} height={192} className="w-full h-full object-cover" />
           <div className="bottom-4 left-4 absolute">
             <p className="font-medium text-sm text-white">{location}</p>
             <h3 className="font-bold text-white text-xl">{title}</h3>

@@ -46,7 +46,7 @@ export default function DashboardPage() {
                 invested={1000}
                 earnings={500}
                 progress={75}
-                image="/placeholder.svg?height=200&width=400"
+                image="/placeholder_realEstate.jpg"
               />
               <ProjectCard
                 title="Apartment Complex B"
@@ -54,7 +54,7 @@ export default function DashboardPage() {
                 invested={800}
                 earnings={320}
                 progress={60}
-                image="/placeholder.svg?height=200&width=400"
+                image="/placeholder_realEstate.jpg"
               />
               <ProjectCard
                 title="Commercial Space C"
@@ -62,7 +62,7 @@ export default function DashboardPage() {
                 invested={700}
                 earnings={210}
                 progress={40}
-                image="/placeholder.svg?height=200&width=400"
+                image="/placeholder_realEstate.jpg"
               />
             </div>
             
