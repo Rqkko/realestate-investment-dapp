@@ -39,7 +39,6 @@ export default function DashboardPage() {
             <Tabs defaultValue="investments" className="space-y-4">
               <TabsList>
                 <TabsTrigger value="investments">Investments</TabsTrigger>
-                <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
               </TabsList>
               <TabsContent value="investments" className="space-y-4">
                 <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
@@ -76,82 +75,6 @@ export default function DashboardPage() {
                     <InvestmentChart />
                   </CardContent>
                 </Card>
-              </TabsContent>
-              <TabsContent value="opportunities" className="space-y-4">
-                <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
-                  <Card>
-                    <CardHeader className="p-0">
-                      <div className="relative w-full h-48">
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0" />
-                        <img
-                          src="/placeholder.svg?height=200&width=400"
-                          alt="Property"
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="bottom-4 left-4 absolute">
-                          <p className="font-medium text-sm text-white">New York, NY</p>
-                          <h3 className="font-bold text-white text-xl">Office Building D</h3>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <p className="text-muted-foreground text-sm">Target raise</p>
-                          <p className="font-bold text-lg">5,000 DP</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground text-sm">Est. APY</p>
-                          <p className="font-bold text-green-600 text-lg">12.5%</p>
-                        </div>
-                      </div>
-                      <Progress value={45} className="mt-4 h-2" />
-                      <div className="flex justify-between mt-1 text-muted-foreground text-xs">
-                        <span>2,250 DP raised</span>
-                        <span>45%</span>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0">
-                      <Button className="w-full">Invest Now</Button>
-                    </CardFooter>
-                  </Card>
-                  <Card>
-                    <CardHeader className="p-0">
-                      <div className="relative w-full h-48">
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0" />
-                        <img
-                          src="/placeholder.svg?height=200&width=400"
-                          alt="Property"
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="bottom-4 left-4 absolute">
-                          <p className="font-medium text-sm text-white">Chicago, IL</p>
-                          <h3 className="font-bold text-white text-xl">Retail Space E</h3>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <p className="text-muted-foreground text-sm">Target raise</p>
-                          <p className="font-bold text-lg">3,500 DP</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground text-sm">Est. APY</p>
-                          <p className="font-bold text-green-600 text-lg">10.8%</p>
-                        </div>
-                      </div>
-                      <Progress value={28} className="mt-4 h-2" />
-                      <div className="flex justify-between mt-1 text-muted-foreground text-xs">
-                        <span>980 DP raised</span>
-                        <span>28%</span>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0">
-                      <Button className="w-full">Invest Now</Button>
-                    </CardFooter>
-                  </Card>
-                </div>
               </TabsContent>
             </Tabs>
           </div>
