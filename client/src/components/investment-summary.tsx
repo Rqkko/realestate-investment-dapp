@@ -12,9 +12,9 @@ export function InvestmentSummary() {
         </CardHeader>
         <CardContent>
           <div className="font-bold text-2xl">2,500 DP</div>
-          <p className="text-muted-foreground text-xs">
+          {/* <p className="text-muted-foreground text-xs">
             <span className="text-green-500">+500 DP</span> from last month
-          </p>
+          </p> */}
         </CardContent>
       </Card>
       <Card>
@@ -24,9 +24,9 @@ export function InvestmentSummary() {
         </CardHeader>
         <CardContent>
           <div className="font-bold text-2xl">3</div>
-          <p className="text-muted-foreground text-xs">
+          {/* <p className="text-muted-foreground text-xs">
             <span className="text-green-500">+1</span> from last month
-          </p>
+          </p> */}
         </CardContent>
       </Card>
       <Card>
@@ -36,9 +36,9 @@ export function InvestmentSummary() {
         </CardHeader>
         <CardContent>
           <div className="font-bold text-2xl">1,030 DP</div>
-          <p className="text-muted-foreground text-xs">
+          {/* <p className="text-muted-foreground text-xs">
             <span className="text-green-500">+210 DP</span> from last month
-          </p>
+          </p> */}
         </CardContent>
       </Card>
     </div>
