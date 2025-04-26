@@ -6,6 +6,12 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+interface InvestmentData {
+  month: string;
+  investedValue: number;
+  totalValue: number;
+}
+
 // Sample data for the chart
 const generateData = (months: number) => {
   const data = []
@@ -28,7 +34,7 @@ const generateData = (months: number) => {
 }
 
 export function InvestmentChart() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<InvestmentData[]>([])
   const [timeframe, setTimeframe] = useState("1y")
 
   useEffect(() => {
