@@ -35,6 +35,7 @@ export default function DashboardPage() {
               <p className="text-muted-foreground">Manage your real estate investments and track your returns.</p>
             </div>
             <InvestmentSummary />
+            <h2 className="font-bold text-2xl tracking-tight">Investments</h2>
             <Tabs defaultValue="investments" className="space-y-4">
               <TabsList>
                 <TabsTrigger value="investments">Investments</TabsTrigger>
