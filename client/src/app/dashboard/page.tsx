@@ -1,8 +1,7 @@
 import { Wallet, Menu } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { InvestmentChart } from "@/components/investment-chart"
 import { ProjectCard } from "@/components/project-card"
