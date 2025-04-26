@@ -24,7 +24,7 @@ Open Ganache and create a new workspace
 - Click `Add Project`
 
 If done correctly, you should see:
-- A new workspace with 10 accounts and 100 ETH each
+- A new workspace with 10 accounts with 100 ETH each
 - Network ID is `1337`
 - RPC server is `HTTP://127.0.0.1:7545`
 
