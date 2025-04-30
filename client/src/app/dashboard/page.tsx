@@ -9,7 +9,9 @@ import { UserNav } from "@/components/user-nav"
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col bg-[#000E56] min-h-screen">
+
+      {/* Header (NavBar) */}
       <header className="top-0 z-30 sticky flex items-center gap-4 bg-background px-4 sm:px-6 border-b h-16">
         <Button variant="outline" size="icon" className="md:hidden">
           <Menu className="w-5 h-5" />
@@ -26,18 +28,19 @@ export default function DashboardPage() {
           <UserNav />
         </div>
       </header>
+      {/* End of Header (NavBar) */}
 
       <div className="flex flex-1">
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
           <div className="flex flex-col gap-6">
             <div>
-              <h1 className="font-bold text-3xl tracking-tight">Investor Dashboard</h1>
-              <p className="text-muted-foreground">Manage your real estate investments and track your returns.</p>
+              <h1 className="font-bold text-3xl text-white tracking-tight">Investor Dashboard</h1>
+              <p className="text-white">Manage your real estate investments and track your returns.</p>
             </div>
 
             <InvestmentSummary />
 
-            <h2 className="font-bold text-2xl tracking-tight">Investments</h2>
+            <h2 className="font-bold text-2xl text-white tracking-tight">Investments</h2>
 
             <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
               <ProjectCard
