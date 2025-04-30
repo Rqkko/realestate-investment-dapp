@@ -1,1 +1,6 @@
+# Truffle/Blockchain
+/bin
+/lib
 /build
+/.cache
+/node_modules
