@@ -8,6 +8,4 @@ module.exports = async function(deployer) {
   
   // Deploy Vault with DP's address
   await deployer.deploy(DPVault, dp.address);
-  
-  console.log('DP deployed at:', dp.address);
 };
