@@ -17,7 +17,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ title, location, invested, earnings, progress, image }: ProjectCardProps) {
   return (
-    <Card>
+    <Card className="bg-[#020C3B]">
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0" />
@@ -31,21 +31,21 @@ export function ProjectCard({ title, location, invested, earnings, progress, ima
       <CardContent className="p-4">
         <div className="gap-4 grid grid-cols-2">
           <div>
-            <p className="text-muted-foreground text-sm">Invested</p>
-            <p className="font-bold text-lg">{invested} DP</p>
+            <p className="text-sm text-white">Invested</p>
+            <p className="font-bold text-lg text-white">{invested} DP</p>
           </div>
           <div>
-            <p className="text-muted-foreground text-sm">Earnings</p>
+            <p className="text-sm text-white">Earnings</p>
             <p className="font-bold text-green-600 text-lg">+{earnings} DP</p>
           </div>
         </div>
         <div className="space-y-2 mt-4">
           <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Project completion</span>
-            <span className="font-medium">{progress}%</span>
+            <span className="text-white">Project completion</span>
+            <span className="font-medium text-white">{progress}%</span>
           </div>
-          <Progress value={progress} className="h-2" />
         </div>
+          <Progress value={progress} className="bg-gray-500 h-2" />
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Button variant="outline" className="w-full" asChild>
