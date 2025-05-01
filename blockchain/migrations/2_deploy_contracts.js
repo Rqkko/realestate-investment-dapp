@@ -1,6 +1,6 @@
 // migrations/2_deploy_contracts.js
-const Example = artifacts.require("Example");
+const Project = artifacts.require("Project");
 
 module.exports = function (deployer) {
-  deployer.deploy(Example);
+  deployer.deploy(Project);
 };
