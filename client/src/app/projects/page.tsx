@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Navbar from "../components/navbar";
 
 const projects = [
   {
@@ -31,57 +32,31 @@ const projects = [
 
 export default function ProjectPage() {
   return (
-    <div className="bg-gradient-to-b from-[#0f1c2e] to-black min-h-screen text-white font-sans">
-      {/* Navbar */}
-      {/* <nav className="top-10 left-1/2 z-30 fixed flex justify-between items-center bg-white/25 shadow-[0px_0px_20px_2px_rgba(255,255,255,0.4)] backdrop-blur-lg mx-auto px-6 sm:px-8 py-3 rounded-full w-full max-w-6xl -translate-x-1/2">
-        <div className="flex flex-grow justify-between items-center space-x-4 sm:space-x-6">
-          <a href="#" className="ml-10 font-reg text-gray-100 text-sm hover:text-white transition-colors">
-            Home
-          </a>
-          <a href="#" className="font-reg text-gray-100 text-sm hover:text-white transition-colors">
-            Projects
-          </a>
-        </div>
-        <div className="left-1/2 absolute font-bold text-3xl text-white transform -translate-x-1/2">
-          Deprop
-        </div>
-        <div className="flex flex-grow justify-end items-center space-x-4 sm:space-x-6">
-          <a href="#" className="font-reg text-gray-100 text-sm hover:text-white transition-colors">
-            Dashboard
-          </a>
-          <span className="bg-black bg-black/70 shadow-[0px_0px_10px_2px_rgba(0,0,0,0.5)] backdrop-blur-lg px-3 py-1 rounded-full font-semibold text-gray-100 text-xl">
-            1000 DP
-          </span>
-          <img
-            src="/happy-laughing-young-handsome-southeast-asian-man-isolated-blue-studio-background.jpg"
-            alt="Profile"
-            className="mr-5 border-2 border-white rounded-full w-9 h-9 object-cover"
-          />
-        </div>
-      </nav> */}
+    <div className="bg-gradient-to-b from-[#0f1c2e] to-black min-h-screen font-sans text-white">
+      <Navbar />
 
       {/* Page title */}
-      <div className="pt-10 px-10 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold">Project open for Investments</h1>
+      <div className="mx-auto px-20 pt-35 max-w-6xl">
+        <h1 className="font-bold text-3xl">Project open for Investments</h1>
       </div>
 
       {/* Project Grid */}
-      <div className="grid grid-cols-2 gap-8 max-w-5xl mx-auto px-6 pb-20 pt-10">
+      <div className="gap-8 grid grid-cols-2 mx-auto px-6 pt-10 pb-20 max-w-5xl">
         {projects.map((project, index) => (
           <div
             key={index}
-            className="bg-white/5 rounded-xl overflow-hidden shadow relative"
+            className="relative bg-white/5 shadow rounded-xl overflow-hidden"
           >
             <img
               src={project.imageUrl}
               alt={project.location}
               className="w-full h-52 object-cover"
             />
-            <div className="p-4 flex justify-between items-center">
-              <p className="text-white text-sm m-0">
+            <div className="flex justify-between items-center p-4">
+              <p className="m-0 text-sm text-white">
                 Location: {project.location}
               </p>
-              <button className="bg-white text-black text-sm font-semibold px-4 py-2 rounded-md hover:bg-gray-200 transition">
+              <button className="bg-white hover:bg-gray-200 px-4 py-2 rounded-md font-semibold text-black text-sm transition">
                 See Details
               </button>
             </div>
