@@ -2,38 +2,54 @@
 pragma solidity ^0.8.0;
 
 contract Project {
-    mapping(address => uint256) public stakes;               // Track how much each user has invested
-    address[] public investors;                              // Store all investor addresses
+    mapping(address => uint256) public stakes;
+    string public projectName;
+    string public projectDescription;
+    string public projectImage;
+    string public projectLocation;
+    address[] public investors;
+    uint256 public amountNeeded;
+    uint256 public amountRaised;
 
-    function invest() public payable {                       // Users invest Ether into the contract
-        if (stakes[msg.sender] == 0) {                       // First-time investor? Add to list
+    function setAmountNeeded(uint256 _amountNeeded) public {
+        amountNeeded = _amountNeeded;
+    }
+
+    // TODO: Change every part that utilizes ETH to DP
+    function invest() public payable {
+        require(msg.value <= amountNeeded, "Investment exceeds amount needed");
+        require(msg.value > 0, "Investment must be greater than 0");
+        // Add investor to list (if not already present)
+        if (stakes[msg.sender] == 0) {
             investors.push(msg.sender);
         }
-        stakes[msg.sender] += msg.value;                     // Increase their stake
+        stakes[msg.sender] += msg.value*100/amountNeeded;
+        amountRaised += msg.value;
     }
 
     function getStake(address user) public view returns (uint256) {
-        return stakes[user];                                 // Return user's invested amount
+        return stakes[user];
     }
 
     function transferStake(address to, uint256 amount) public {
-        require(stakes[msg.sender] >= amount, "Not enough stake"); // Ensure sender has enough stake
+        require(stakes[msg.sender] >= amount, "Not enough stake");
 
-        if (stakes[to] == 0) {                               // New recipient? Add to investors
+        if (stakes[to] == 0) {
             investors.push(to);
         }
 
-        stakes[msg.sender] -= amount;                        // Deduct from sender
-        stakes[to] += amount;                                // Add to recipient
+        stakes[msg.sender] -= amount;
+        stakes[to] += amount;
     }
 
-    function distributeDividend() public {
-        for (uint i = 0; i < investors.length; i++) {        // Loop through all investors
-            address investor = investors[i];                 // Get investor address
-            uint256 dividend = stakes[investor] / 100;       // Calculate 1% dividend
-            payable(investor).transfer(dividend);            // Send dividend
+    function distributeDividend(uint256 amount) public {
+        for (uint256 i = 0; i < investors.length; i++) {
+            address investor = investors[i];
+            uint256 dividend = amount * stakes[investor] / 100;
+            payable(investor).transfer(dividend);
         }
     }
-
-    receive() external payable {}                            // Allow contract to receive Ether
+    
+    // Allow contract to receive Ether
+    receive() external payable {}
 }
