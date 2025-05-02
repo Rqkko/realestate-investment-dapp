@@ -13,9 +13,13 @@ contract Project {
     enum ProjectStatus { RaisingFunds, Building, Completed }
     ProjectStatus public status;
 
+    // TODO Make Project constructor to initialize project w/ details
+
     function setAmountNeeded(uint256 _amountNeeded) public {
         amountNeeded = _amountNeeded;
     }
+
+    // TODO make 'setStatus' function
 
     // TODO: Change every part that utilizes ETH to DP
     function invest() public payable {
