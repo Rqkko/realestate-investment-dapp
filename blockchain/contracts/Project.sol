@@ -21,6 +21,9 @@ contract Project {
 
     // TODO make 'setStatus' function
 
+    // TODO Investor can sell their stake for DP
+    //      For now, investor can sell their stake without another investor (sell to "Project")
+
     // TODO: Change every part that utilizes ETH to DP
     function invest() public payable {
         require(msg.value <= amountNeeded, "Investment exceeds amount needed");
