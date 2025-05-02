@@ -3,13 +3,15 @@ pragma solidity ^0.8.0;
 
 contract Project {
     mapping(address => uint256) public stakes;
-    string public projectName;
-    string public projectDescription;
-    string public projectImage;
-    string public projectLocation;
+    string public name;
+    string public description;
+    string public image;
+    string public location;
     address[] public investors;
     uint256 public amountNeeded;
     uint256 public amountRaised;
+    enum ProjectStatus { RaisingFunds, Building, Completed }
+    ProjectStatus public status;
 
     function setAmountNeeded(uint256 _amountNeeded) public {
         amountNeeded = _amountNeeded;
