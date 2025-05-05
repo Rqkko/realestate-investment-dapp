@@ -5,7 +5,7 @@ contract Project {
     mapping(address => uint256) public stakes;
     string public name;
     string public description;
-    string public image;
+    // string public image;
     string public location;
     address[] public investors;
     uint256 public amountNeeded;
@@ -13,7 +13,12 @@ contract Project {
     enum ProjectStatus { RaisingFunds, Building, Completed }
     ProjectStatus public status;
 
-    // TODO Make Project constructor to initialize project w/ details
+    constructor(string memory _name, string memory _description, string memory _location) {
+        name = _name;
+        description = _description;
+        location = _location;
+        status = ProjectStatus.RaisingFunds;
+    }
 
     function setAmountNeeded(uint256 _amountNeeded) public {
         amountNeeded = _amountNeeded;

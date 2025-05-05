@@ -8,5 +8,5 @@ module.exports = async function(deployer) {
     await deployer.deploy(DPVault, dp.address);
   });
 
-  deployer.deploy(Project);
+  deployer.deploy(Project, "Project A", "Put description here", "Sukhumvit");
 };
