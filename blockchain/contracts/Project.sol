@@ -13,6 +13,7 @@ contract Project {
     address[] public investors;
     uint256 public amountNeeded;
     uint256 public amountRaised;
+
     enum ProjectStatus { RaisingFunds, Building, Completed }
     ProjectStatus public status;
 
@@ -42,8 +43,11 @@ contract Project {
         status = _status;
     }
 
-    // TODO Investor can sell their stake for DP
-    //      For now, investor can sell their stake without another investor (sell to "Project")
+    // Investor can sell stake to project directly
+    function sellStake(uint256 amount) public {
+        require(stakes[msg.sender] >= amount, "Insufficient stake to sell");
+        uint256 refund = (amount * amountNeeded) / 100;
+        require(address(this).balance >= refund, "Project has insufficient balance");
 
     function invest(uint256 dpAmount) public {
         require(status == ProjectStatus.RaisingFunds, "Project is not raising funds");
@@ -89,7 +93,7 @@ contract Project {
             dpToken.transfer(investor, dividend);
         }
     }
-    
+
     // Allow contract to receive Ether
     receive() external payable {}
 }
