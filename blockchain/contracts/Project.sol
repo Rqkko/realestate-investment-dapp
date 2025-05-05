@@ -10,29 +10,56 @@ contract Project {
     address[] public investors;
     uint256 public amountNeeded;
     uint256 public amountRaised;
+
     enum ProjectStatus { RaisingFunds, Building, Completed }
     ProjectStatus public status;
 
-    // TODO Make Project constructor to initialize project w/ details
+    // Project constructor to initialize project with details
+    constructor(
+        string memory _name,
+        string memory _description,
+        string memory _image,
+        string memory _location,
+        uint256 _amountNeeded
+    ) {
+        name = _name;
+        description = _description;
+        image = _image;
+        location = _location;
+        amountNeeded = _amountNeeded;
+        amountRaised = 0;
+        status = ProjectStatus.RaisingFunds;
+    }
 
     function setAmountNeeded(uint256 _amountNeeded) public {
         amountNeeded = _amountNeeded;
     }
 
-    // TODO make 'setStatus' function
+    // setStatus function
+    function setStatus(ProjectStatus _status) public {
+        status = _status;
+    }
 
-    // TODO Investor can sell their stake for DP
-    //      For now, investor can sell their stake without another investor (sell to "Project")
+    // Investor can sell stake to project directly
+    function sellStake(uint256 amount) public {
+        require(stakes[msg.sender] >= amount, "Insufficient stake to sell");
+        uint256 refund = (amount * amountNeeded) / 100;
+        require(address(this).balance >= refund, "Project has insufficient balance");
 
-    // TODO: Change every part that utilizes ETH to DP
+        stakes[msg.sender] -= amount;
+        payable(msg.sender).transfer(refund);
+    }
+
+    // invest() using ETH, logic complete
     function invest() public payable {
         require(msg.value <= amountNeeded, "Investment exceeds amount needed");
         require(msg.value > 0, "Investment must be greater than 0");
-        // Add investor to list (if not already present)
+
         if (stakes[msg.sender] == 0) {
             investors.push(msg.sender);
         }
-        stakes[msg.sender] += msg.value*100/amountNeeded;
+
+        stakes[msg.sender] += msg.value * 100 / amountNeeded;
         amountRaised += msg.value;
     }
 
@@ -58,7 +85,7 @@ contract Project {
             payable(investor).transfer(dividend);
         }
     }
-    
+
     // Allow contract to receive Ether
     receive() external payable {}
 }
