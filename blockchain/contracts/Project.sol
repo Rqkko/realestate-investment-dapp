@@ -44,10 +44,34 @@ contract Project {
     }
 
     // Investor can sell stake to project directly
-    function sellStake(uint256 amount) public {
-        require(stakes[msg.sender] >= amount, "Insufficient stake to sell");
-        uint256 refund = (amount * amountNeeded) / 100;
-        require(address(this).balance >= refund, "Project has insufficient balance");
+    function sellStake(uint256 stakeAmount) public {
+        require(stakeAmount > 0, "Amount must be greater than 0");
+        require(stakes[msg.sender] >= stakeAmount, "Not enough stake to sell");
+
+        // Calculate the DP token amount to return to the investor
+        uint256 dpAmount = (stakeAmount * amountNeeded) / 10000;
+
+        // Ensure the project has enough DP tokens to pay the investor
+        require(dpToken.balanceOf(address(this)) >= dpAmount, "Project does not have enough DP tokens");
+
+        // Transfer DP tokens back to the investor
+        dpToken.transfer(msg.sender, dpAmount);
+
+        // Update the investor's stake and the amount raised
+        stakes[msg.sender] -= stakeAmount;
+        amountRaised -= dpAmount;
+
+        // Remove the investor from the list if their stake becomes zero
+        if (stakes[msg.sender] == 0) {
+            for (uint256 i = 0; i < investors.length; i++) {
+                if (investors[i] == msg.sender) {
+                    investors[i] = investors[investors.length - 1];
+                    investors.pop();
+                    break;
+                }
+            }
+        }
+    }
 
     function invest(uint256 dpAmount) public {
         require(status == ProjectStatus.RaisingFunds, "Project is not raising funds");
