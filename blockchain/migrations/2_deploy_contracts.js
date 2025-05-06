@@ -9,5 +9,5 @@ module.exports = async function(deployer) {
   await deployer.deploy(DPVault, dp.address);
   const vault = await DPVault.deployed();
   // await deployer.deploy(Project, "Project A", "Description", "Location", dp.address, vault.address);
-  deployer.deploy(ProjectFactory);
+  await deployer.deploy(ProjectFactory, dp.address, vault.address);
 };
