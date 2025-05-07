@@ -19,31 +19,31 @@ module.exports = async function (callback) {
 
     // Step 2: Each account deposits
     await vault.deposit({
-      from: accounts[9],
+      from: accounts[2],
       value: web3.utils.toWei("5", "ether") // 5 ETH * 100 = 500 DP
     })
-    console.log(`Account 9 DP Balance:`, (await dp.balanceOf(accounts[9])).toString());
+    console.log(`Account 2 DP Balance:`, (await dp.balanceOf(accounts[2])).toString());
     await vault.deposit({
-      from: accounts[8],
+      from: accounts[3],
       value: web3.utils.toWei("3", "ether") // 3 ETH * 100 = 300 DP
     })
-    console.log(`Account 8 DP Balance:`, (await dp.balanceOf(accounts[8])).toString());
+    console.log(`Account 3 DP Balance:`, (await dp.balanceOf(accounts[3])).toString());
     await vault.deposit({
-      from: accounts[7],
+      from: accounts[4],
       value: web3.utils.toWei("1", "ether") // 1 ETH * 100 = 100 DP
     })
-    console.log(`Account 7 DP Balance:`, (await dp.balanceOf(accounts[7])).toString());
+    console.log(`Account 4 DP Balance:`, (await dp.balanceOf(accounts[4])).toString());
 
     // Step 3: Each account approves and invests their DP
     console.log("Approving and investing DP...");
-    await dp.approve(project.address, 500, { from: accounts[9] });
-    await project.invest(500, { from: accounts[9] });
+    await dp.approve(project.address, 500, { from: accounts[2] });
+    await project.invest(500, { from: accounts[2] });
 
-    await dp.approve(project.address, 300, { from: accounts[8] });
-    await project.invest(300, { from: accounts[8] });
+    await dp.approve(project.address, 300, { from: accounts[3] });
+    await project.invest(300, { from: accounts[3] });
 
-    await dp.approve(project.address, 100, { from: accounts[7] });
-    await project.invest(100, { from: accounts[7] });
+    await dp.approve(project.address, 100, { from: accounts[4] });
+    await project.invest(100, { from: accounts[4] });
 
     // Step 4: Check final raised amount
     const amountRaised = await project.amountRaised();
