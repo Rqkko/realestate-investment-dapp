@@ -16,9 +16,10 @@ contract Project {
 
     enum ProjectStatus { RaisingFunds, Building, Completed }
     ProjectStatus public status;
-
     DP public dpToken;
     DPVault public dpVault;
+    
+    event ContributionReceived(address indexed contributor, uint256 dpAmount);
 
     constructor(
         string memory _name,
@@ -118,6 +119,22 @@ contract Project {
         }
     }
 
-    // Allow contract to receive Ether
-    receive() external payable {}
+    function depositDP(uint256 dpAmount) public {
+        require(dpAmount > 0, "Amount must be greater than 0");
+
+        // Transfer DP tokens from the sender to the Project contract
+        dpToken.transferFrom(msg.sender, address(this), dpAmount);
+
+        // Emit an event for tracking contributions
+        emit ContributionReceived(msg.sender, dpAmount);
+    }
+
+    // function depositToVault() public payable {
+    //     require(msg.value > 0, "Must send Ether to deposit");
+    //     require(address(this).balance >= msg.value, "Insufficient Ether balance");
+    //     dpVault.deposit{value: msg.value}();
+    // }
+
+    // // Allow contract to receive Ether
+    // receive() external payable {}
 }

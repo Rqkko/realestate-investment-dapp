@@ -23,7 +23,7 @@ contract DPVault is Ownable {
     function deposit() public payable {
         require(msg.value > 0, "DPVault: ETH amount must be > 0");
         require(address(msg.sender).balance >= msg.value, "DPVault: Insufficient ETH balance");
-        uint256 dpAmount = msg.value * rate;
+        uint256 dpAmount = msg.value * rate / 1 ether;
         dpToken.mint(msg.sender, dpAmount);
         emit Deposited(msg.sender, msg.value, dpAmount);
     }
@@ -33,7 +33,7 @@ contract DPVault is Ownable {
         require(dpToken.balanceOf(msg.sender) >= dpAmount, "DPVault: Insufficient DP balance");
         require(address(this).balance >= dpAmount/rate, "DPVault: Insufficient ETH in vault");
         dpToken.burnFrom(msg.sender, dpAmount);
-        payable(msg.sender).transfer(dpAmount/rate);
+        payable(msg.sender).transfer(dpAmount/rate * 1 ether);
         emit Withdrawn(msg.sender, dpAmount, dpAmount);
     }
 
