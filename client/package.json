@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "setup-contracts": "cd ../blockchain && truffle migrate && cd ../client && cp -r ../blockchain/build/contracts ./src/lib/",
+    "setup-contracts": "cd ../blockchain && truffle migrate --reset && cd ../client && cp -r ../blockchain/build/contracts ./src/lib/",
     "copy-contracts": "cp -r ../blockchain/build/contracts ./src/lib/"
   },
   "dependencies": {
