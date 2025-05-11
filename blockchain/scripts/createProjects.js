@@ -23,6 +23,12 @@ module.exports = async function (callback) {
     const project3 = await Project.at(projectAddress3);
     console.log("'Nova Crest' deployed at:", project3.address);
 
+    await factory.createProject("The Luma", "Affordable Living", "Bangkok", 500);
+    const projectAddress4 = await factory.getProject(3);
+    const project4 = await Project.at(projectAddress4);
+    console.log("'The Luma' deployed at:", project4.address);
+    project4.setStatus(2);
+
     callback();
   } catch (err) {
     console.error("Error in script:", err);
