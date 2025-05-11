@@ -112,6 +112,7 @@ contract Project {
     }
 
     function distributeDividend(uint256 amount) public {
+        require(amount <= dpToken.balanceOf(address(this)), "Not enough DP tokens in the project");
         for (uint256 i = 0; i < investors.length; i++) {
             address investor = investors[i];
             uint256 dividend = amount * stakes[investor] / 10000;

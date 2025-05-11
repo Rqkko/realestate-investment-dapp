@@ -23,8 +23,10 @@ module.exports = async function (callback) {
     const dpInProject = await dp.balanceOf(project.address);
     console.log("DP in project:", dpInProject.toString());
 
-    // Distribute DP to all investors
-    project.distributeDividend(1000)
+    // Investors sell stakes
+    await project.sellStake(5000, { from: accounts[2] });
+    await project.sellStake(3000, { from: accounts[3] });
+    await project.sellStake(1000, { from: accounts[4] });
     console.log("DP distributed to all investors");
 
     // Approve DP for the vault

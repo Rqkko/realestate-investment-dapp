@@ -10,14 +10,13 @@ module.exports = async function (callback) {
     const vault = await DPVault.deployed();
     const factory = await ProjectFactory.deployed();
 
-    // Step 1: Create a project
-    console.log("Creating project...");
-    await factory.createProject("Project A", "Luxury condo", "Sukhumvit", 1000);
+    // Get 'The Avana' project address
+    console.log("Gettings 'The Avana'...");
     const projectAddress = await factory.getProject(0);
     const project = await Project.at(projectAddress);
-    console.log("Project deployed at:", project.address);
+    console.log("'The Avana' deployed at:", project.address);
 
-    // Step 2: Each account deposits
+    // Each account deposits
     await vault.deposit({
       from: accounts[2],
       value: web3.utils.toWei("5", "ether") // 5 ETH * 100 = 500 DP
@@ -34,7 +33,7 @@ module.exports = async function (callback) {
     })
     console.log(`Account 4 DP Balance:`, (await dp.balanceOf(accounts[4])).toString());
 
-    // Step 3: Each account approves and invests their DP
+    // Each account approves and invests their DP
     console.log("Approving and investing DP...");
     await dp.approve(project.address, 500, { from: accounts[2] });
     await project.invest(500, { from: accounts[2] });
@@ -45,7 +44,7 @@ module.exports = async function (callback) {
     await dp.approve(project.address, 100, { from: accounts[4] });
     await project.invest(100, { from: accounts[4] });
 
-    // Step 4: Check final raised amount
+    // Check final raised amount
     const amountRaised = await project.amountRaised();
     console.log("Amount Raised:", amountRaised.toString());
 
