@@ -44,6 +44,10 @@ contract Project {
         status = _status;
     }
 
+    function getAllInvestors() public view returns (address[] memory) {
+        return investors;
+    }
+
     // Investor can sell stake to project directly
     function sellStake(uint256 stakeAmount) public {
         require(stakeAmount > 0, "Amount must be greater than 0");

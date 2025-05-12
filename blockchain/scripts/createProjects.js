@@ -27,7 +27,7 @@ module.exports = async function (callback) {
     const projectAddress4 = await factory.getProject(3);
     const project4 = await Project.at(projectAddress4);
     console.log("'The Luma' deployed at:", project4.address);
-    project4.setStatus(2);
+    await project4.setStatus(2);
 
     callback();
   } catch (err) {
