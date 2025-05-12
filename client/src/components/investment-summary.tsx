@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 export function InvestmentSummary() {
   return (
     <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
-      <Card className="bg-[#020C3B]">
+      <Card className="bg-white/5">
         <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
           <CardTitle className="font-bold text-sm text-white">Total DP Invested</CardTitle>
           <Coins className="w-4 h-4 text-muted-foreground" />
@@ -17,7 +17,7 @@ export function InvestmentSummary() {
           </p> */}
         </CardContent>
       </Card>
-      <Card className="bg-[#020C3B]">
+      <Card className="bg-white/5">
         <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
           <CardTitle className="font-bold text-sm text-white">Projects Invested</CardTitle>
           <Building className="w-4 h-4 text-muted-foreground" />
@@ -29,7 +29,7 @@ export function InvestmentSummary() {
           </p> */}
         </CardContent>
       </Card>
-      <Card className="bg-[#020C3B]">
+      <Card className="bg-white/5">
         <CardHeader className="flex flex-row justify-between items-center space-y-0 pb-2">
           <CardTitle className="font-bold text-sm text-white">Total Earnings</CardTitle>
           <TrendingUp className="w-4 h-4 text-muted-foreground" />

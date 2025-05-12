@@ -6,31 +6,14 @@ import { InvestmentChart } from "@/components/investment-chart"
 import { ProjectCard } from "@/components/project-card"
 import { InvestmentSummary } from "@/components/investment-summary"
 import { UserNav } from "@/components/user-nav"
+import Navbar from "../components/navbar"
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col bg-[#000E56] min-h-screen">
+    <div className="bg-gradient-to-b from-[#0f1c2e] to-black min-h-screen font-sans text-white">
+      <Navbar />
 
-      {/* Header (NavBar) */}
-      <header className="top-0 z-30 sticky flex items-center gap-4 bg-background px-4 sm:px-6 border-b h-16">
-        <Button variant="outline" size="icon" className="md:hidden">
-          <Menu className="w-5 h-5" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-        <div className="flex items-center gap-2">
-          <h1 className="font-semibold text-xl tracking-tight">DeProp</h1>
-        </div>
-        <div className="flex items-center gap-4 ml-auto">
-          <div className="flex items-center gap-2 font-medium text-sm">
-            <Wallet className="w-5 h-5 text-primary" />
-            <span>1,000 DP</span>
-          </div>
-          <UserNav />
-        </div>
-      </header>
-      {/* End of Header (NavBar) */}
-
-      <div className="flex flex-1">
+      <div className="flex flex-1 pt-35">
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
           <div className="flex flex-col gap-6">
             <div>
@@ -69,14 +52,14 @@ export default function DashboardPage() {
               />
             </div>
             
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Investment Performance</CardTitle>
               </CardHeader>
               <CardContent>
                 <InvestmentChart />
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </main>
       </div>

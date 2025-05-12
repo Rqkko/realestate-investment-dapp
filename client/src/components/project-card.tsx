@@ -17,7 +17,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ title, location, invested, earnings, progress, image }: ProjectCardProps) {
   return (
-    <Card className="bg-[#020C3B]">
+    <Card className="bg-white/5">
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0" />
@@ -48,7 +48,7 @@ export function ProjectCard({ title, location, invested, earnings, progress, ima
           <Progress value={progress} className="bg-gray-500 h-2" />
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Button variant="outline" className="w-full" asChild>
+        <Button variant="outline" className="bg-white/5 w-full" asChild>
           <Link href="#">
             Details
             <ArrowUpRight className="ml-2 w-4 h-4" />
