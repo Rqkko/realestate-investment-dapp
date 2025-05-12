@@ -2,7 +2,13 @@ import { Coins, Building, TrendingUp } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export function InvestmentSummary() {
+interface InvestmentSummaryProps {
+  totalInvested: number
+  projectsInvested: number
+  totalEarnings: number
+}
+
+export function InvestmentSummary({ totalInvested, projectsInvested, totalEarnings }: InvestmentSummaryProps) {
   return (
     <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
       <Card className="bg-white/5">
@@ -11,7 +17,7 @@ export function InvestmentSummary() {
           <Coins className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="font-bold text-2xl text-white">2,500 DP</div>
+          <div className="font-bold text-2xl text-white">{totalInvested} DP</div>
           {/* <p className="text-muted-foreground text-xs">
             <span className="text-green-500">+500 DP</span> from last month
           </p> */}
@@ -23,7 +29,7 @@ export function InvestmentSummary() {
           <Building className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="font-bold text-2xl text-white">3</div>
+          <div className="font-bold text-2xl text-white">{projectsInvested}</div>
           {/* <p className="text-muted-foreground text-xs">
             <span className="text-green-500">+1</span> from last month
           </p> */}
@@ -35,7 +41,7 @@ export function InvestmentSummary() {
           <TrendingUp className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="font-bold text-2xl text-white">1,030 DP</div>
+          <div className="font-bold text-2xl text-white">{totalEarnings} DP</div>
           {/* <p className="text-muted-foreground text-xs">
             <span className="text-green-500">+210 DP</span> from last month
           </p> */}
