@@ -7,17 +7,19 @@ import { Progress } from "@/components/ui/progress"
 import Image from "next/image"
 
 interface ProjectCardProps {
+  address: string
   title: string
   location: string
+  status: string
   invested: number
   earnings: number
   progress: number
   image: string
 }
 
-export function ProjectCard({ title, location, invested, earnings, progress, image }: ProjectCardProps) {
+export function ProjectCard({ address, title, location, status, invested, earnings, progress, image }: ProjectCardProps) {
   return (
-    <Card className="bg-white/5">
+    <Card className="gap-2 bg-white/5">
       <CardHeader className="p-0">
         <div className="relative w-full h-48">
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0" />
@@ -29,6 +31,10 @@ export function ProjectCard({ title, location, invested, earnings, progress, ima
         </div>
       </CardHeader>
       <CardContent className="p-4">
+        <div>
+          <p className="text-sm text-white">Status</p>
+          <p className="font-bold text-lg text-white">{status}</p>
+        </div>
         <div className="gap-4 grid grid-cols-2">
           <div>
             <p className="text-sm text-white">Invested</p>
@@ -49,7 +55,7 @@ export function ProjectCard({ title, location, invested, earnings, progress, ima
       </CardContent>
       <CardFooter className="flex flex-col gap-4 p-4 pt-0">
         <Button variant="outline" className="bg-white/5 w-full" asChild>
-          <Link href="#">
+          <Link href={`/projectDetails/${address}`}>
             Details
             <ArrowUpRight className="ml-2 w-4 h-4" />
           </Link>

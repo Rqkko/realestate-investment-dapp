@@ -15,7 +15,7 @@ import realestate2 from "../../../public/realestates/realestate_2.jpg";
 import realestate3 from "../../../public/realestates/realestate_3.jpg";
 import realestate4 from "../../../public/realestates/realestate_4.jpg";
 
-const images = [realestate1, realestate2, realestate3, realestate4];
+const images = [realestate1.src, realestate2.src, realestate3.src, realestate4.src];
 
 const ProjectStatusMap = {
   0: "Raising Funds",
@@ -143,30 +143,22 @@ export default function DashboardPage() {
             <h2 className="font-bold text-2xl text-white tracking-tight">Investments</h2>
 
             <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
-              <ProjectCard
-                title="Condo A"
-                location="Miami, FL"
-                invested={1000}
-                earnings={500}
-                progress={75}
-                image="/placeholder_realEstate.jpg"
-              />
-              <ProjectCard
-                title="Apartment Complex B"
-                location="Austin, TX"
-                invested={800}
-                earnings={320}
-                progress={60}
-                image="/placeholder_realEstate.jpg"
-              />
-              <ProjectCard
-                title="Commercial Space C"
-                location="New York, NY"
-                invested={700}
-                earnings={210}
-                progress={40}
-                image="/placeholder_realEstate.jpg"
-              />
+              {projects.map((project, index) => {
+
+                return (
+                  <ProjectCard
+                    key={index}
+                    address={project.address}
+                    title={project.name}
+                    location={project.location}
+                    status={project.status}
+                    invested={project.amountRaised}
+                    earnings={0} //TODO: Calculate earnings based on project data
+                    progress={(project.amountRaised / project.amountNeeded) * 100}
+                    image={images[index % 4]}
+                  />
+                );
+              })}
             </div>
             
             {/* <Card>
