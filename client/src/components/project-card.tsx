@@ -47,10 +47,16 @@ export function ProjectCard({ title, location, invested, earnings, progress, ima
         </div>
           <Progress value={progress} className="bg-gray-500 h-2" />
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="flex flex-col gap-4 p-4 pt-0">
         <Button variant="outline" className="bg-white/5 w-full" asChild>
           <Link href="#">
             Details
+            <ArrowUpRight className="ml-2 w-4 h-4" />
+          </Link>
+        </Button>
+        <Button variant="outline" className="bg-white/5 w-full" asChild>
+          <Link href="#">
+            Sell
             <ArrowUpRight className="ml-2 w-4 h-4" />
           </Link>
         </Button>
