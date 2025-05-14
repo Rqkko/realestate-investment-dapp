@@ -29,6 +29,8 @@ interface Project {
   location: string;
   amountRaised: number;
   amountNeeded: number;
+  amountInvested: number;
+  amountEarnings: number;
   status: string;
 }
 
@@ -73,6 +75,8 @@ export default function DashboardPage() {
             const location = await projectContract.location();
             const amountNeeded = await projectContract.amountNeeded();
             const amountRaised = await projectContract.amountRaised();
+            const amountInvested = (await projectContract.getStake(account)) * amountNeeded / 10000;
+            const amountEarnings = await projectContract.getEarnings(account);
             const status = await projectContract.status();
 
             projectsTemp.push({
@@ -81,6 +85,8 @@ export default function DashboardPage() {
               location,
               amountRaised: amountRaised.toNumber(),
               amountNeeded: amountNeeded.toNumber(),
+              amountInvested:  amountInvested,
+              amountEarnings: amountEarnings.toNumber(),
               status: ProjectStatusMap[status as keyof typeof ProjectStatusMap],
             });
           })
@@ -100,14 +106,14 @@ export default function DashboardPage() {
     const calculateInvestmentSummary = () => {
       let totalInvestedTemp = 0;
       let projectsInvestedTemp = 0;
-      // let totalEarningsTemp = 0;
+      let totalEarningsTemp = 0;
 
       projects.forEach((project) => {
-        const investedAmount = project.amountRaised;
-        // const earnings = (project.amountRaised / project.amountNeeded) * 100;
+        const investedAmount = project.amountInvested;
+        const earnings = project.amountEarnings
 
         totalInvestedTemp += investedAmount;
-        // totalEarningsTemp += earnings;
+        totalEarningsTemp += earnings;
 
         if (investedAmount > 0) {
           projectsInvestedTemp++;
@@ -116,7 +122,7 @@ export default function DashboardPage() {
 
       setTotalInvested(totalInvestedTemp);
       setProjectsInvested(projectsInvestedTemp);
-      // setTotalEarnings(totalEarningsTemp);
+      setTotalEarnings(totalEarningsTemp);
     };
 
     calculateInvestmentSummary();
@@ -153,7 +159,7 @@ export default function DashboardPage() {
                     location={project.location}
                     status={project.status}
                     invested={project.amountRaised}
-                    earnings={0} //TODO: Calculate earnings based on project data
+                    earnings={project.amountEarnings}
                     progress={(project.amountRaised / project.amountNeeded) * 100}
                     image={images[index % 4]}
                   />
