@@ -6,6 +6,7 @@ import "./DPVault.sol";
 
 contract Project {
     mapping(address => uint256) public stakes;  // out of 10000 (To allow decimal in frontend)
+    mapping(address => uint256) public earnings;
     string public name;
     string public description;
     // string public image;
@@ -42,6 +43,18 @@ contract Project {
 
     function setStatus(ProjectStatus _status) public {
         status = _status;
+    }
+
+    function getAllInvestors() public view returns (address[] memory) {
+        return investors;
+    }
+
+    function getStake(address user) public view returns (uint256) {
+        return stakes[user];
+    }
+
+    function getEarnings(address investor) public view returns (uint256) {
+        return earnings[investor];
     }
 
     // Investor can sell stake to project directly
@@ -96,10 +109,6 @@ contract Project {
         }
     }
 
-    function getStake(address user) public view returns (uint256) {
-        return stakes[user];
-    }
-
     function transferStake(address to, uint256 amount) public {
         require(stakes[msg.sender] >= amount, "Not enough stake");
 
@@ -117,6 +126,7 @@ contract Project {
             address investor = investors[i];
             uint256 dividend = amount * stakes[investor] / 10000;
             dpToken.transfer(investor, dividend);
+            earnings[investor] += dividend;
         }
     }
 
