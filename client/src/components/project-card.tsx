@@ -1,6 +1,5 @@
 import { ArrowUpRight } from "lucide-react"
 import Link from "next/link"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -12,12 +11,13 @@ interface ProjectCardProps {
   location: string
   status: string
   invested: number
+  stakes: number
   earnings: number
   progress: number
   image: string
 }
 
-export function ProjectCard({ address, title, location, status, invested, earnings, progress, image }: ProjectCardProps) {
+export function ProjectCard({ address, title, location, status, invested, stakes, earnings, progress, image }: ProjectCardProps) {
   return (
     <Card className="gap-2 bg-white/5">
       <CardHeader className="p-0">
@@ -31,23 +31,29 @@ export function ProjectCard({ address, title, location, status, invested, earnin
         </div>
       </CardHeader>
       <CardContent className="p-4">
-        <div>
-          <p className="text-sm text-white">Status</p>
-          <p className="font-bold text-lg text-white">{status}</p>
-        </div>
         <div className="gap-4 grid grid-cols-2">
+          <div>
+            <p className="text-sm text-white">Status</p>
+            <p className="font-bold text-lg text-white">{status}</p>
+          </div>
           <div>
             <p className="text-sm text-white">Invested</p>
             <p className="font-bold text-lg text-white">{invested} DP</p>
           </div>
+        </div>
+        <div className="gap-4 grid grid-cols-2">
+          <div>
+            <p className="text-sm text-white">Stakes</p>
+            <p className="font-bold text-lg text-white">{stakes}%</p>
+          </div>
           <div>
             <p className="text-sm text-white">Earnings</p>
-            <p className="font-bold text-green-600 text-lg">+{earnings} DP</p>
+            <p className="font-bold text-lg text-white">{earnings} DP</p>
           </div>
         </div>
         <div className="space-y-2 mt-4">
           <div className="flex justify-between text-xs">
-            <span className="text-white">Project completion</span>
+            <span className="text-white">Percent Raised</span>
             <span className="font-medium text-white">{progress}%</span>
           </div>
         </div>
@@ -60,12 +66,12 @@ export function ProjectCard({ address, title, location, status, invested, earnin
             <ArrowUpRight className="ml-2 w-4 h-4" />
           </Link>
         </Button>
-        <Button variant="outline" className="bg-white/5 w-full" asChild>
+        {/* <Button variant="outline" className="bg-white/5 w-full" asChild>
           <Link href="#">
             Sell
             <ArrowUpRight className="ml-2 w-4 h-4" />
           </Link>
-        </Button>
+        </Button> */}
       </CardFooter>
     </Card>
   )
