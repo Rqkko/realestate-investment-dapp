@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import Navbar from "./components/navbar";
 import realestate1 from "../../public/realestates/realestate_1.jpg";
