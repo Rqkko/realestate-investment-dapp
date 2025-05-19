@@ -1,15 +1,13 @@
-"use client"
+"use client";
 
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 import { projectFactoryContract, account } from "@/lib/contract";
 import ProjectABI from "@/lib/contracts/Project.json";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-// import { InvestmentChart } from "@/components/investment-chart"
-import { ProjectCard } from "@/components/project-card"
-import { InvestmentSummary } from "@/components/investment-summary"
-import Navbar from "../components/navbar"
+import { ProjectCard } from "@/components/project-card";
+import { InvestmentSummary } from "@/components/investment-summary";
+import Navbar from "../components/navbar";
 import realestate1 from "../../../public/realestates/realestate_1.jpg";
 import realestate2 from "../../../public/realestates/realestate_2.jpg";
 import realestate3 from "../../../public/realestates/realestate_3.jpg";
@@ -30,6 +28,7 @@ interface Project {
   amountRaised: number;
   amountNeeded: number;
   amountInvested: number;
+  stakes: number;
   amountEarnings: number;
   status: string;
 }
@@ -76,6 +75,7 @@ export default function DashboardPage() {
             const amountNeeded = await projectContract.amountNeeded();
             const amountRaised = await projectContract.amountRaised();
             const amountInvested = (await projectContract.getStake(account)) * amountNeeded / 10000;
+            const stakes = await projectContract.getStake(account);
             const amountEarnings = await projectContract.getEarnings(account);
             const status = await projectContract.status();
 
@@ -86,6 +86,7 @@ export default function DashboardPage() {
               amountRaised: amountRaised.toNumber(),
               amountNeeded: amountNeeded.toNumber(),
               amountInvested:  amountInvested,
+              stakes: stakes.toNumber()/100,
               amountEarnings: amountEarnings.toNumber(),
               status: ProjectStatusMap[status as keyof typeof ProjectStatusMap],
             });
@@ -158,7 +159,8 @@ export default function DashboardPage() {
                     title={project.name}
                     location={project.location}
                     status={project.status}
-                    invested={project.amountRaised}
+                    invested={project.amountInvested}
+                    stakes={project.stakes}
                     earnings={project.amountEarnings}
                     progress={(project.amountRaised / project.amountNeeded) * 100}
                     image={images[index % 4]}
