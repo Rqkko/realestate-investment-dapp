@@ -3,17 +3,35 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import blockies from "ethereum-blockies-base64";
-import { account } from "@/lib/contract";
+import { ethers } from "ethers";
 import Image from "next/image";
+
+import { account, dpContract } from "@/lib/contract";
 
 export default function Navbar() {
   const router = useRouter();
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [dpBalance, setDpBalance] = useState<string>("0");
 
     useEffect(() => {
       if (account) {
         setAvatar(blockies( account ));
       }
+    }, []);
+
+    useEffect(() => {
+      const fetchBalance = async () => {
+        if (dpContract && account) {
+          try {
+            const bal = await dpContract.balanceOf(account);
+            setDpBalance(ethers.utils.formatUnits(bal, 0));
+          } catch (err) {
+            console.error("Error fetching DP balance:", err);
+            setDpBalance("0");
+          }
+        }
+      };
+      fetchBalance();
     }, []);
 
   return (
@@ -43,7 +61,7 @@ export default function Navbar() {
           Dashboard
         </button>
         <span className="bg-black/70 shadow-[0px_0px_10px_2px_rgba(0,0,0,0.5)] backdrop-blur-lg mr-3 px-3 py-1 rounded-full font-semibold text-gray-100 text-xl">
-          1000 DP
+          {dpBalance} DP
         </span>
         <Image
           src={avatar || "/default-profile.jpg"}
