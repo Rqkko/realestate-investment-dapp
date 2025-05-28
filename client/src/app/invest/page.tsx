@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { account, exampleContract } from "@/lib/contract";
 
-
 export default function Home() {
   const [ownership, setOwnership] = useState<string>("");
 
@@ -12,7 +11,9 @@ export default function Home() {
       alert("Contract not deployed on this network.");
       return;
     }
-    const tx = await exampleContract.invest({ value: ethers.utils.parseEther("0.01") });
+    const tx = await exampleContract.invest({
+      value: ethers.utils.parseEther("0.01"),
+    });
     await tx.wait();
     alert("Invested 0.01 ETH");
   };
@@ -28,7 +29,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col justify-center items-center bg-gray-100 p-6 min-h-screen">
-      <h1 className="mb-6 font-bold text-4xl text-blue-600">DeProp Real Estate dApp</h1>
+      <h1 className="mb-6 font-bold text-4xl text-blue-600">
+        DeProp Real Estate dApp
+      </h1>
       <div className="space-y-4">
         <button
           onClick={handleInvest}
