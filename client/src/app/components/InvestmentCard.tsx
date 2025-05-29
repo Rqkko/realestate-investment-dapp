@@ -172,9 +172,14 @@ import { ethers } from "ethers";
 import { account } from "@/lib/contract";
 import ProjectABI from "@/lib/contracts/Project.json";
 
-export default function InvestmentCard() {
-  const [investmentAmount, setInvestmentAmount] = useState<string>(""); // User's input investment amount
-  const [remainingShare, setRemainingShare] = useState<number>(30000); // Initial mock data for remaining shares
+interface InvestmentCardProps {
+  projectAddress: string;
+  setProjectName: (name: string) => void;
+}
+
+export default function InvestmentCard({ projectAddress, setProjectName }: InvestmentCardProps) {
+  const [investmentAmount, setInvestmentAmount] = useState<string>("");
+  const [remainingShare, setRemainingShare] = useState<number>(0);
   const [projectDetails, setProjectDetails] = useState({
     name: "",
     location: "",
@@ -185,93 +190,121 @@ export default function InvestmentCard() {
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
-  if (!account) {
-    alert("Please connect your wallet.");
+      if (!account) {
+        alert("Please connect your wallet.");
+        return;
+      }
+
+      try {
+        const provider = new ethers.providers.Web3Provider(
+          window.ethereum as unknown as ethers.providers.ExternalProvider,
+          "any"
+        );
+        const signer = provider.getSigner();
+        const projectContract = new ethers.Contract(projectAddress, ProjectABI.abi, signer);
+
+        const name = await projectContract.name();
+        setProjectName(name);
+        const location = await projectContract.location();
+        const amountNeeded = parseInt(await projectContract.amountNeeded());
+        const amountRaised = parseInt(await projectContract.amountRaised());
+        const statusEnum = parseInt(await projectContract.status());
+
+        const statusMap: Record<number, string> = {
+          0: "Raising Funds",
+          1: "Building",
+          2: "Completed",
+        };
+
+        setProjectDetails({
+          name,
+          location,
+          amountNeeded,
+          amountRaised,
+          status: statusMap[statusEnum] || "Unknown",
+        });
+
+        setRemainingShare(amountNeeded - amountRaised);
+      } catch (error) {
+        console.error("Error fetching project details:", error);
+        alert("Failed to fetch project details. Check console for details.");
+      }
+    };
+
+    if (projectAddress) fetchProjectDetails();
+  }, [projectAddress, setProjectName]);
+
+  const handleInvest = async () => {
+  if (!investmentAmount || parseFloat(investmentAmount) <= 0) {
+    alert("Please enter a valid investment amount greater than 0.");
     return;
   }
 
   try {
-    const projectAddress = "<PROJECT_CONTRACT_ADDRESS>"; // Replace with your actual contract address
-    const provider = new ethers.providers.Web3Provider(
-      window.ethereum as unknown as ethers.providers.ExternalProvider
-    );
+    const provider = new ethers.providers.Web3Provider(window.ethereum as any);
     const signer = provider.getSigner();
+    const userAddress = await signer.getAddress();
+
     const projectContract = new ethers.Contract(projectAddress, ProjectABI.abi, signer);
+    const dpTokenAddress = await projectContract.dpToken();
 
-    // Fetching details from the contract
-    const name = await projectContract.name();
-    const location = await projectContract.location();
-    const amountNeeded = parseInt(await projectContract.amountNeeded());
-    const amountRaised = parseInt(await projectContract.amountRaised());
-    const statusEnum = parseInt(await projectContract.status());
+    const dpToken = new ethers.Contract(
+      dpTokenAddress,
+      [
+        "function approve(address spender, uint256 amount) public returns (bool)",
+        "function allowance(address owner, address spender) public view returns (uint256)",
+        "function balanceOf(address account) view returns (uint256)",
+        "function decimals() view returns (uint8)",
+      ],
+      signer
+    );
 
-    const statusMap: Record<number, string> = {
-  0: "Raising Funds",
-  1: "Building",
-  2: "Completed",
-};
+    // 🔥 TEMP: Hardcode decimals = 0
+    const decimals = 0;
+    console.log("Using token decimals:", decimals);
 
+    const dpAmount = ethers.BigNumber.from(investmentAmount);
 
-    setProjectDetails({
-      name,
-      location,
-      amountNeeded,
-      amountRaised,
-      status: statusMap[statusEnum] || "Unknown",
-    });
+    const balance = await dpToken.balanceOf(userAddress);
+    console.log("User DP balance (raw):", balance.toString());
+    console.log("Investment amount (raw):", dpAmount.toString());
 
-    setRemainingShare(amountNeeded - amountRaised);
-  } catch (error) {
-    console.error("Error fetching project details:", error);
-    alert("Failed to fetch project details. Please check the console for more information.");
-  }
-};
-
-    fetchProjectDetails();
-  }, []);
-
-  const handleInvest = async () => {
-    if (!investmentAmount || parseFloat(investmentAmount) <= 0) {
-      alert("Please enter a valid investment amount greater than 0.");
+    if (balance.lt(dpAmount)) {
+      alert(`Not enough DP tokens. You have ${balance.toString()} DP.`);
       return;
     }
 
-    try {
-      const projectAddress = "<PROJECT_CONTRACT_ADDRESS>"; // Replace with your actual contract address
-      const provider = new ethers.providers.Web3Provider(
-  window.ethereum as unknown as ethers.providers.ExternalProvider
-);
-      const signer = provider.getSigner();
-      const projectContract = new ethers.Contract(projectAddress, ProjectABI.abi, signer);
-
-      const dpAmount = ethers.utils.parseEther(investmentAmount);
-      const tx = await projectContract.invest(dpAmount);
-      await tx.wait();
-
-      alert(`Successfully invested ${investmentAmount} DP!`);
-      setRemainingShare((prev) => prev - parseFloat(investmentAmount));
-    } catch (error) {
-      console.error("Investment error:", error);
-      alert("Investment failed. Please try again or check the console for errors.");
+    const allowance = await dpToken.allowance(userAddress, projectAddress);
+    if (allowance.lt(dpAmount)) {
+      const approveTx = await dpToken.approve(projectAddress, dpAmount);
+      await approveTx.wait();
     }
-  };
+
+    const investTx = await projectContract.invest(dpAmount);
+    await investTx.wait();
+
+    alert(`Successfully invested ${investmentAmount} DP!`);
+    setInvestmentAmount("");
+
+    const updatedRaised = await projectContract.amountRaised();
+    const updatedNeeded = await projectContract.amountNeeded();
+    setRemainingShare(updatedNeeded - updatedRaised);
+
+  } catch (error) {
+    console.error("Investment error:", error);
+    alert("Investment failed. Check the console for details.");
+  }
+};
+
+
 
   return (
     <div className="gap-6 grid grid-cols-3 bg-black/20 mx-auto mt-10 p-6 rounded-2xl max-w-5xl text-white">
-      {/* Left side (project details) */}
       <div className="flex flex-col space-y-2 col-span-2">
-        <p>
-          <span className="font-semibold">Location:</span> {projectDetails.location}
-        </p>
-        <p>
-          <span className="font-semibold">Company:</span> UrbanPrime Dev
-        </p>
-        <p>
-          <span className="font-semibold">Price per Unit:</span> $450,000
-        </p>
-        <p>
-          <span className="font-semibold">Status:</span> {projectDetails.status}
-        </p>
+        <p><span className="font-semibold">Location:</span> {projectDetails.location}</p>
+        <p><span className="font-semibold">Company:</span> UrbanPrime Dev</p>
+        <p><span className="font-semibold">Price per Unit:</span> $450,000</p>
+        <p><span className="font-semibold">Status:</span> {projectDetails.status}</p>
         <div className="mt-4">
           <p className="mb-1 font-semibold">More information:</p>
           <p>Bedrooms: 1</p>
@@ -284,9 +317,7 @@ export default function InvestmentCard() {
         </div>
       </div>
 
-      {/* Right side (remaining share and invest input) */}
       <div className="flex flex-col justify-between">
-        {/* Remaining share */}
         <div className="bg-black/30 shadow-[0px_0px_15px_2px_rgba(255,255,255,0.2)] mb-4 px-10 py-5 rounded-2xl text-center">
           <p className="text-lg">Remaining share:</p>
           <p className="mt-1 font-bold text-3xl">
@@ -294,7 +325,6 @@ export default function InvestmentCard() {
           </p>
         </div>
 
-        {/* Invest input */}
         <div className="flex flex-col space-y-4 bg-black/30 shadow-[0px_0px_15px_2px_rgba(255,255,255,0.2)] px-4 py-12 rounded-2xl">
           <div className="flex items-center bg-black/40 px-4 py-2 rounded-lg">
             <input
