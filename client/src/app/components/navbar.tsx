@@ -106,11 +106,8 @@ export default function Navbar() {
     if (account) {
       setAvatar(blockies(account));
     }
-  }, [account]);
-
-  useEffect(() => {
     fetchBalance();
-  }, [account, dpContract]);
+  }, []);
 
   // Overlay content
   let overlayContent = null;
