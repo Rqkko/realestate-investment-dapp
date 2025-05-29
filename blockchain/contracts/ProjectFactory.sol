@@ -40,6 +40,4 @@ contract ProjectFactory {
     function getProjectCount() external view returns (uint256) {
         return projects.length;
     }
-
-    // TODO: make getOnGoingProjects()
 }
