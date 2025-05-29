@@ -12,13 +12,13 @@ export default function Navbar() {
   const router = useRouter();
   const [avatar, setAvatar] = useState<string | null>(null);
   const [dpBalance, setDpBalance] = useState<string>("0");
-  
-  // Deposit States
-  const [showDepositOverlay, setShowDepositOverlay] = useState(false);
-  const [depositAmount, setDepositAmount] = useState<string>("");
-  const [depositLoading, setDepositLoading] = useState(false);
-  const [depositTxError, setDepositTxError] = useState<string | null>(null);
 
+  // Overlay States
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [overlayMode, setOverlayMode] = useState<"menu" | "deposit" | "withdraw">("menu");
+  const [amount, setAmount] = useState<string>("");
+  const [txLoading, setTxLoading] = useState(false);
+  const [txError, setTxError] = useState<string | null>(null);
 
   async function fetchBalance() {
     if (dpContract && account) {
@@ -35,43 +35,186 @@ export default function Navbar() {
   // Deposit ETH to receive DP
   async function handleDeposit() {
     if (!dpVaultContract) {
-      setDepositTxError("Vault contract not initialized.");
+      setTxError("Vault contract not initialized.");
       return;
     }
-    setDepositLoading(true);
-    setDepositTxError(null);
+    setTxLoading(true);
+    setTxError(null);
     try {
-      if (!provider || !account || !depositAmount) {
-        setDepositTxError("Wallet not connected or invalid amount.");
-        setDepositLoading(false);
+      if (!provider || !account || !amount) {
+        setTxError("Wallet not connected or invalid amount.");
+        setTxLoading(false);
         return;
       }
       const signer = provider.getSigner();
-      // Call deposit() and send ETH as value
       const tx = await dpVaultContract.connect(signer).deposit({
-        value: ethers.utils.parseEther(depositAmount),
+        value: ethers.utils.parseEther(amount),
       });
       await tx.wait();
-      setShowDepositOverlay(false);
-      setDepositAmount("");
-      
-      fetchBalance(); // Refresh DP balance after deposit
+      setShowOverlay(false);
+      setAmount("");
+      fetchBalance();
     } catch (error) {
-      setDepositTxError("Transaction failed. Please try again.");
+      setTxError("Transaction failed. Please try again.");
       console.error("Vault deposit error:", error);
     }
-    setDepositLoading(false);
+    setTxLoading(false);
+  }
+
+  // Withdraw DP to receive ETH
+  async function handleWithdraw() {
+    if (!dpVaultContract) {
+      setTxError("Vault contract not initialized.");
+      return;
+    }
+    if (!dpContract) {
+      setTxError("DP contract not initialized.");
+      return;
+    }
+
+    setTxLoading(true);
+    setTxError(null);
+    try {
+      if (!provider || !account || !amount) {
+        setTxError("Wallet not connected or invalid amount.");
+        setTxLoading(false);
+        return;
+      }
+      const signer = provider.getSigner();
+
+      const dpAmount = amount;
+
+      // Approve the vault to spend DP tokens
+      const approveTx = await dpContract.connect(signer).approve(dpVaultContract.address, dpAmount);
+      await approveTx.wait();
+
+      // Withdraw DP for ETH
+      const tx = await dpVaultContract.connect(signer).withdraw(dpAmount);
+      await tx.wait();
+
+      setShowOverlay(false);
+      setAmount("");
+      fetchBalance();
+    } catch (error) {
+      setTxError("Transaction failed. Please try again.");
+      console.error("Vault withdraw error:", error);
+    }
+    setTxLoading(false);
   }
 
   useEffect(() => {
     if (account) {
-      setAvatar(blockies( account ));
+      setAvatar(blockies(account));
     }
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     fetchBalance();
-  }, []);
+  }, [account, dpContract]);
+
+  // Overlay content
+  let overlayContent = null;
+  if (showOverlay) {
+    if (overlayMode === "menu") {
+      overlayContent = (
+        <div className="flex flex-col items-center bg-white shadow-lg p-8 rounded-xl min-w-[320px]">
+          <h2 className="mb-4 font-bold text-black text-xl">DP Vault</h2>
+          <div className="flex gap-4">
+            <button
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-semibold text-white transition"
+              onClick={() => { setOverlayMode("deposit"); setTxError(null); setAmount(""); }}
+            >
+              Deposit
+            </button>
+            <button
+              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white transition"
+              onClick={() => { setOverlayMode("withdraw"); setTxError(null); setAmount(""); }}
+            >
+              Withdraw
+            </button>
+          </div>
+          <button
+            className="bg-gray-300 hover:bg-gray-400 mt-6 px-4 py-2 rounded font-semibold text-black transition"
+            onClick={() => { setShowOverlay(false); setOverlayMode("menu"); setTxError(null); setAmount(""); }}
+          >
+            Close
+          </button>
+        </div>
+      );
+    } else if (overlayMode === "deposit") {
+      overlayContent = (
+        <div className="flex flex-col items-center bg-white shadow-lg p-8 rounded-xl min-w-[320px]">
+          <h2 className="mb-4 font-bold text-black text-xl">Deposit ETH for DP</h2>
+          <input
+            type="number"
+            min="0"
+            step="any"
+            placeholder="Amount in ETH"
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            className="mb-4 px-4 py-2 border rounded w-full text-black"
+            disabled={txLoading}
+          />
+          {txError && <div className="mb-2 text-red-600">{txError}</div>}
+          <div className="flex gap-4">
+            <button
+              onClick={handleDeposit}
+              disabled={txLoading || !amount}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-semibold text-white transition"
+            >
+              {txLoading ? "Depositing..." : "Deposit"}
+            </button>
+            <button
+              onClick={() => { setOverlayMode("menu"); setTxError(null); setAmount(""); }}
+              className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded font-semibold text-black transition"
+              disabled={txLoading}
+            >
+              Back
+            </button>
+          </div>
+          <p className="mt-4 text-gray-500 text-xs">
+            1 ETH will be converted to 100 DP tokens
+          </p>
+        </div>
+      );
+    } else if (overlayMode === "withdraw") {
+      overlayContent = (
+        <div className="flex flex-col items-center bg-white shadow-lg p-8 rounded-xl min-w-[320px]">
+          <h2 className="mb-4 font-bold text-black text-xl">Withdraw DP for ETH</h2>
+          <input
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Amount in DP"
+            value={amount}
+            onChange={e => setAmount(e.target.value)}
+            className="mb-4 px-4 py-2 border rounded w-full text-black"
+            disabled={txLoading}
+          />
+          {txError && <div className="mb-2 text-red-600">{txError}</div>}
+          <div className="flex gap-4">
+            <button
+              onClick={handleWithdraw}
+              disabled={txLoading || !amount}
+              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold text-white transition"
+            >
+              {txLoading ? "Withdrawing..." : "Withdraw"}
+            </button>
+            <button
+              onClick={() => { setOverlayMode("menu"); setTxError(null); setAmount(""); }}
+              className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded font-semibold text-black transition"
+              disabled={txLoading}
+            >
+              Back
+            </button>
+          </div>
+          <p className="mt-4 text-gray-500 text-xs">
+            100 DP tokens will be converted to 1 ETH
+          </p>
+        </div>
+      );
+    }
+  }
 
   return (
     <>
@@ -100,13 +243,13 @@ export default function Navbar() {
           >
             Dashboard
           </button>
-            <button 
+          <button 
             className="bg-black/70 hover:bg-black shadow-[0px_0px_10px_2px_rgba(0,0,0,0.5)] backdrop-blur-lg mr-3 px-3 py-1 rounded-full font-semibold text-gray-100 text-xl hover:text-white transition-colors"
-            onClick={() => setShowDepositOverlay(true)}
-            title="Deposit ETH to receive DP"
-            >
+            onClick={() => { setShowOverlay(true); setOverlayMode("menu"); setTxError(null); setAmount(""); }}
+            title="Deposit or Withdraw DP"
+          >
             {dpBalance} DP
-            </button>
+          </button>
           <Image
             src={avatar || "/default-profile.jpg"}
             alt="Profile"
@@ -116,46 +259,9 @@ export default function Navbar() {
           />
         </div>
       </nav>
-
-      {showDepositOverlay && (
+      {showOverlay && (
         <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/60">
-          <div className="flex flex-col items-center bg-white shadow-lg p-8 rounded-xl min-w-[320px]">
-            <h2 className="mb-4 font-bold text-black text-xl">Deposit ETH for DP</h2>
-            <input
-              type="number"
-              min="0"
-              step="any"
-              placeholder="Amount in ETH"
-              value={depositAmount}
-              onChange={e => setDepositAmount(e.target.value)}
-              className="mb-4 px-4 py-2 border rounded w-full text-black"
-              disabled={depositLoading}
-            />
-            {depositTxError && <div className="mb-2 text-red-600">{depositTxError}</div>}
-            <div className="flex gap-4">
-              <button
-                onClick={handleDeposit}
-                disabled={depositLoading || !depositAmount}
-                className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-semibold text-white transition"
-              >
-                {depositLoading ? "Depositing..." : "Deposit"}
-              </button>
-              <button
-                onClick={() => {
-                  setShowDepositOverlay(false);
-                  setDepositAmount("");
-                  setDepositTxError(null);
-                }}
-                className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded font-semibold text-black transition"
-                disabled={depositLoading}
-              >
-                Cancel
-              </button>
-            </div>
-            <p className="mt-4 text-gray-500 text-xs">
-              1 ETH will be converted to 100 DP tokens
-            </p>
-          </div>
+          {overlayContent}
         </div>
       )}
     </>
