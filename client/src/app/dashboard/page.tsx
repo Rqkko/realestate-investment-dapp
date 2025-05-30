@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { projectFactoryContract, account } from "@/lib/contract";
 import ProjectABI from "@/lib/contracts/Project.json";
+import ProjectMetadataABI from "@/lib/contracts/ProjectMetadata.json";
 import { ProjectCard } from "@/components/project-card";
 import { InvestmentSummary } from "@/components/investment-summary";
 import Navbar from "@/components/navbar";
@@ -60,21 +61,25 @@ export default function DashboardPage() {
 
           const investors = await projectContract.getAllInvestors();
 
-          if (!account) {
-            console.log("Please connect your wallet.");
+          if (!investors.map((addr: string) => addr.toLowerCase()).includes(account?.toLowerCase())) {
             return;
           }
 
-          if (!investors.map((addr: string) => addr.toLowerCase()).includes(account.toLowerCase())) {
-            return;
-          }
+          // New: Fetch metadata from ProjectMetadata contract
+          const metadataAddress = await projectContract.projectMetadata();
+          const metadataContract = new ethers.Contract(
+            metadataAddress,
+            ProjectMetadataABI.abi,
+            projectFactoryContract?.signer
+          );
 
-          const name = await projectContract.name();
-          const location = await projectContract.location();
+          const name = await metadataContract.name();
+          const location = await metadataContract.location();
+
           const amountNeeded = await projectContract.amountNeeded();
           const amountRaised = await projectContract.amountRaised();
-          const amountInvested = (await projectContract.getStake(account)) * amountNeeded / 10000;
-          const stakes = await projectContract.getStake(account);
+          const stake = await projectContract.getStake(account);
+          const amountInvested = (stake * amountNeeded) / 10000;
           const amountEarnings = await projectContract.getEarnings(account);
           const status = await projectContract.status();
 
@@ -84,15 +89,14 @@ export default function DashboardPage() {
             location,
             amountRaised: amountRaised.toNumber(),
             amountNeeded: amountNeeded.toNumber(),
-            amountInvested:  amountInvested,
-            stakes: stakes.toNumber()/100,
+            amountInvested: amountInvested,
+            stakes: stake.toNumber() / 100,
             amountEarnings: amountEarnings.toNumber(),
             status: ProjectStatusMap[status as keyof typeof ProjectStatusMap],
           });
         })
       );
 
-      console.log("Projects Temp:", projectsTemp);
       setProjects(projectsTemp);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -105,7 +109,7 @@ export default function DashboardPage() {
     // event listener to refresh projects when DP balance changes
     window.addEventListener("refresh-dp-balance", fetchProjects);
     return () => window.removeEventListener("refresh-dp-balance", fetchProjects);
-  }, [])
+  }, []);
 
   useEffect(() => {
     const calculateInvestmentSummary = () => {
@@ -114,13 +118,10 @@ export default function DashboardPage() {
       let totalEarningsTemp = 0;
 
       projects.forEach((project) => {
-        const investedAmount = project.amountInvested;
-        const earnings = project.amountEarnings
+        totalInvestedTemp += project.amountInvested;
+        totalEarningsTemp += project.amountEarnings;
 
-        totalInvestedTemp += investedAmount;
-        totalEarningsTemp += earnings;
-
-        if (investedAmount > 0) {
+        if (project.amountInvested > 0) {
           projectsInvestedTemp++;
         }
       });
@@ -131,7 +132,7 @@ export default function DashboardPage() {
     };
 
     calculateInvestmentSummary();
-  }, [projects])
+  }, [projects]);
 
   return (
     <div className="bg-gradient-to-b from-[#0f1c2e] to-black min-h-screen font-sans text-white">
@@ -154,23 +155,20 @@ export default function DashboardPage() {
             <h2 className="font-bold text-2xl text-white tracking-tight">Investments</h2>
 
             <div className="gap-4 grid md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project, index) => {
-
-                return (
-                  <ProjectCard
-                    key={index}
-                    address={project.address}
-                    title={project.name}
-                    location={project.location}
-                    status={project.status}
-                    invested={project.amountInvested}
-                    stakes={project.stakes}
-                    earnings={project.amountEarnings}
-                    progress={(project.amountRaised / project.amountNeeded) * 100}
-                    image={images[index % 4]}
-                  />
-                );
-              })}
+              {projects.map((project, index) => (
+                <ProjectCard
+                  key={index}
+                  address={project.address}
+                  title={project.name}
+                  location={project.location}
+                  status={project.status}
+                  invested={project.amountInvested}
+                  stakes={project.stakes}
+                  earnings={project.amountEarnings}
+                  progress={(project.amountRaised / project.amountNeeded) * 100}
+                  image={images[index % 4]}
+                />
+              ))}
             </div>
             
             {/* <Card>
@@ -185,5 +183,5 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }
