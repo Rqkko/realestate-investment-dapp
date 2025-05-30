@@ -18,6 +18,11 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ address, title, location, status, invested, stakes, earnings, progress, image }: ProjectCardProps) {
+
+  function sellStakes() {
+    console.log(`Selling stakes for project at address: ${address}`);
+  }
+
   return (
     <Card className="gap-2 bg-white/5">
       <CardHeader className="p-0">
@@ -66,12 +71,14 @@ export function ProjectCard({ address, title, location, status, invested, stakes
             <ArrowUpRight className="ml-2 w-4 h-4" />
           </Link>
         </Button>
-        {/* <Button variant="outline" className="bg-white/5 w-full" asChild>
-          <Link href="#">
-            Sell
-            <ArrowUpRight className="ml-2 w-4 h-4" />
-          </Link>
-        </Button> */}
+        <Button
+          variant="outline"
+          className="bg-white/5 w-full"
+          onClick={sellStakes}
+        >
+          Sell
+          <ArrowUpRight className="ml-2 w-4 h-4" />
+        </Button>
       </CardFooter>
     </Card>
   )
