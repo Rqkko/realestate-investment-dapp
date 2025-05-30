@@ -107,6 +107,10 @@ export default function Navbar() {
       setAvatar(blockies(account));
     }
     fetchBalance();
+
+    // Refresh DP balance when "refresh-dp-balance" is dispatched
+    window.addEventListener("refresh-dp-balance", fetchBalance);
+    return () => window.removeEventListener("refresh-dp-balance", fetchBalance);
   }, []);
 
   // Overlay content
