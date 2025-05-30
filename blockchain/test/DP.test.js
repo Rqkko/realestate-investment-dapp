@@ -1,7 +1,7 @@
 const DP = artifacts.require("DP");
 const DPVault = artifacts.require("DPVault");
 
-contract("DPVault", (accounts) => {
+contract("DP Integration", (accounts) => {
   let dp, vault;
   const owner = accounts[0];
   const user = accounts[1];
