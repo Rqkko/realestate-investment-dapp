@@ -3,14 +3,12 @@ pragma solidity ^0.8.0;
 
 import "./DP.sol";
 import "./DPVault.sol";
+import "./ProjectMetadata.sol";
 
 contract Project {
     mapping(address => uint256) public stakes;  // out of 10000 (To allow decimal in frontend)
     mapping(address => uint256) public earnings;
-    string public name;
-    string public description;
-    // string public image;
-    string public location;
+    ProjectMetadata public projectMetadata;
     address[] public investors;
     uint256 public amountNeeded;
     uint256 public amountRaised;
@@ -23,11 +21,11 @@ contract Project {
     event ContributionReceived(address indexed contributor, uint256 dpAmount);
 
     constructor(
-        address _metadata,
+        address _projectMetadata,
         address _dpTokenAddress,
         address _dpVaultAddress
     ) {
-        metadata = ProjectMetadata(_metadata);
+        projectMetadata = ProjectMetadata(_projectMetadata);
         status = ProjectStatus.RaisingFunds;
         dpToken = DP(_dpTokenAddress);
         dpVault = DPVault(payable(_dpVaultAddress));
