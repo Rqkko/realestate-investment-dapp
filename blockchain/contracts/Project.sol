@@ -23,15 +23,11 @@ contract Project {
     event ContributionReceived(address indexed contributor, uint256 dpAmount);
 
     constructor(
-        string memory _name,
-        string memory _description,
-        string memory _location,
+        address _metadata,
         address _dpTokenAddress,
         address _dpVaultAddress
     ) {
-        name = _name;
-        description = _description;
-        location = _location;
+        metadata = ProjectMetadata(_metadata);
         status = ProjectStatus.RaisingFunds;
         dpToken = DP(_dpTokenAddress);
         dpVault = DPVault(payable(_dpVaultAddress));
