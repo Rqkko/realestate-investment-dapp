@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import InvestmentCard from "@/app/components/InvestmentCard";
-import Navbar from "@/app/components/navbar";
+import InvestmentCard from "@/components/InvestmentCard";
+import Navbar from "@/components/navbar";
 
 import realestate1 from "../../../../public/realestates/realestate_1.jpg";
 import realestate2 from "../../../../public/realestates/realestate_2.jpg";
