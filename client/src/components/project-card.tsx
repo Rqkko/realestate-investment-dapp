@@ -43,7 +43,7 @@ export function ProjectCard({ address, title, location, status, invested, stakes
         setSellLoading(false);
         return;
       }
-      if (!sellAmount || isNaN(Number(sellAmount)) || Number(sellAmount) <= 0) {
+      if (!sellAmount || isNaN(Number(sellAmount)) || Number(sellAmount) <= 0 || Number(sellAmount) > stakes) {
         setSellError("Enter a valid amount.");
         setSellLoading(false);
         return;
@@ -134,16 +134,19 @@ export function ProjectCard({ address, title, location, status, invested, stakes
         <div className="z-50 fixed inset-0 flex justify-center items-center bg-black/60">
           <div className="flex flex-col items-center bg-white shadow-lg p-8 rounded-xl min-w-[320px]">
             <h2 className="mb-4 font-bold text-black text-xl">Sell Stakes</h2>
-            <input
-              type="number"
-              min="0"
-              step="any"
-              placeholder="Amount to sell"
-              value={sellAmount}
-              onChange={e => setSellAmount(e.target.value)}
-              className="mb-4 px-4 py-2 border rounded w-full text-black"
-              disabled={sellLoading}
-            />
+            <div className="flex items-center mb-4 w-40%">
+              <input
+                type="number"
+                min="0.00"
+                step="1"
+                placeholder="Percent to sell"
+                value={sellAmount}
+                onChange={e => setSellAmount(e.target.value)}
+                className="px-4 py-2 border rounded w-full text-black"
+                disabled={sellLoading}
+              />
+              <span className="ml-2 font-semibold text-black text-lg">%</span>
+            </div>
             {sellError && <div className="mb-2 text-red-600">{sellError}</div>}
             <div className="flex gap-4">
               <button
@@ -162,7 +165,7 @@ export function ProjectCard({ address, title, location, status, invested, stakes
               </button>
             </div>
             <p className="mt-4 text-gray-500 text-xs">
-              Specify the amount of stakes you want to sell for this project.
+              Specify the percent of stakes you want to sell for this project.
             </p>
           </div>
         </div>
