@@ -63,6 +63,7 @@ export function ProjectCard({ address, title, location, status, invested, stakes
       setShowSellOverlay(false);
       setSellLoading(false);
       setSellAmount("");
+      window.dispatchEvent(new Event("refresh-dp-balance"));
     } catch (error) {
       setSellError("Failed to sell stakes.");
       setSellLoading(false);

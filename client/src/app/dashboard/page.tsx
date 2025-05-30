@@ -39,68 +39,72 @@ export default function DashboardPage() {
   const [projectsInvested, setProjectsInvested] = useState<number>(0);
   const [totalEarnings, setTotalEarnings] = useState<number>(0);
 
+  async function fetchProjects() {
+    if (!account) {
+      alert("Please connect your wallet.");
+      return;
+    }
+
+    try {
+      const projectAddresses = await projectFactoryContract?.getAllProjects() as string[];
+
+      const projectsTemp: Project[] = [];
+
+      await Promise.all(
+        projectAddresses.map(async (projectAddress) => {
+          const projectContract = new ethers.Contract(
+            projectAddress,
+            ProjectABI.abi,
+            projectFactoryContract?.signer
+          );
+
+          const investors = await projectContract.getAllInvestors();
+
+          if (!account) {
+            console.log("Please connect your wallet.");
+            return;
+          }
+
+          if (!investors.map((addr: string) => addr.toLowerCase()).includes(account.toLowerCase())) {
+            return;
+          }
+
+          const name = await projectContract.name();
+          const location = await projectContract.location();
+          const amountNeeded = await projectContract.amountNeeded();
+          const amountRaised = await projectContract.amountRaised();
+          const amountInvested = (await projectContract.getStake(account)) * amountNeeded / 10000;
+          const stakes = await projectContract.getStake(account);
+          const amountEarnings = await projectContract.getEarnings(account);
+          const status = await projectContract.status();
+
+          projectsTemp.push({
+            address: projectAddress,
+            name,
+            location,
+            amountRaised: amountRaised.toNumber(),
+            amountNeeded: amountNeeded.toNumber(),
+            amountInvested:  amountInvested,
+            stakes: stakes.toNumber()/100,
+            amountEarnings: amountEarnings.toNumber(),
+            status: ProjectStatusMap[status as keyof typeof ProjectStatusMap],
+          });
+        })
+      );
+
+      console.log("Projects Temp:", projectsTemp);
+      setProjects(projectsTemp);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  }
+
   useEffect(() => {
-    const fetchProjects = async () => {
-      if (!account) {
-        alert("Please connect your wallet.");
-        return;
-      }
-
-      try {
-        const projectAddresses = await projectFactoryContract?.getAllProjects() as string[];
-
-        const projectsTemp: Project[] = [];
-
-        await Promise.all(
-          projectAddresses.map(async (projectAddress) => {
-            const projectContract = new ethers.Contract(
-              projectAddress,
-              ProjectABI.abi,
-              projectFactoryContract?.signer
-            );
-
-            const investors = await projectContract.getAllInvestors();
-
-            if (!account) {
-              console.log("Please connect your wallet.");
-              return;
-            }
-
-            if (!investors.map((addr: string) => addr.toLowerCase()).includes(account.toLowerCase())) {
-              return;
-            }
-
-            const name = await projectContract.name();
-            const location = await projectContract.location();
-            const amountNeeded = await projectContract.amountNeeded();
-            const amountRaised = await projectContract.amountRaised();
-            const amountInvested = (await projectContract.getStake(account)) * amountNeeded / 10000;
-            const stakes = await projectContract.getStake(account);
-            const amountEarnings = await projectContract.getEarnings(account);
-            const status = await projectContract.status();
-
-            projectsTemp.push({
-              address: projectAddress,
-              name,
-              location,
-              amountRaised: amountRaised.toNumber(),
-              amountNeeded: amountNeeded.toNumber(),
-              amountInvested:  amountInvested,
-              stakes: stakes.toNumber()/100,
-              amountEarnings: amountEarnings.toNumber(),
-              status: ProjectStatusMap[status as keyof typeof ProjectStatusMap],
-            });
-          })
-        );
-
-        console.log("Projects Temp:", projectsTemp);
-        setProjects(projectsTemp);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
-
     fetchProjects();
+
+    // event listener to refresh projects when DP balance changes
+    window.addEventListener("refresh-dp-balance", fetchProjects);
+    return () => window.removeEventListener("refresh-dp-balance", fetchProjects);
   }, [])
 
   useEffect(() => {
