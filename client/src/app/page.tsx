@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Navbar from "./components/navbar";
+import Navbar from "@/components/navbar";
 import realestate1 from "../../public/realestates/realestate_1.jpg";
 import realestate2 from "../../public/realestates/realestate_2.jpg";
 import realestate3 from "../../public/realestates/realestate_3.jpg";
