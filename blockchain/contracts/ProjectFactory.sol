@@ -21,8 +21,33 @@ contract ProjectFactory {
         dpVault = DPVault(payable(_dpVaultAddress));
     }
 
-    function createProject(string calldata name, string calldata description, string calldata location, uint256 amountNeeded) external {
-        Project project = new Project(name, description, location, address(dpToken), address(dpVault));
+    function createProject(
+        string memory name,
+        string memory companyName,
+        string memory description,
+        string memory location,
+        uint8 numBedrooms,
+        uint8 roomSize,
+        string memory furniture,
+        string memory facilities,
+        uint256 amountNeeded
+    ) external {
+        ProjectMetadata metadata = new ProjectMetadata(
+            name,
+            companyName,
+            description,
+            location,
+            numBedrooms,
+            roomSize,
+            furniture,
+            facilities
+        );
+
+        Project project = new Project(
+            address(metadata),
+            address(dpToken),
+            address(dpVault)
+        );
         project.setAmountNeeded(amountNeeded);
         projects.push(project);
         emit ProjectCreated(address(project), msg.sender);
