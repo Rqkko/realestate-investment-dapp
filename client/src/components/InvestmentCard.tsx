@@ -242,8 +242,8 @@ export default function InvestmentCard({
 
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 grid grid-cols-3 gap-6 bg-black/20 rounded-2xl p-6 text-white">
-      <div className="col-span-2 flex flex-col space-y-2">
+    <div className="gap-6 grid grid-cols-3 bg-black/20 mx-auto mt-10 p-6 rounded-2xl max-w-5xl text-white">
+      <div className="flex flex-col space-y-2 col-span-2">
         <p>
           <span className="font-semibold">Location:</span>{" "}
           {projectDetails.location}
@@ -263,7 +263,7 @@ export default function InvestmentCard({
           <span className="font-semibold">Status:</span> {projectDetails.status}
         </p>
         <div className="mt-4">
-          <p className="font-semibold mb-1">More information:</p>
+          <p className="mb-1 font-semibold">More information:</p>
           <p>Bedrooms: {metaDetails.numBedrooms}</p>
           <p>Room Size: {metaDetails.roomSize} sq. ft.</p>
           <p>Furniture: {metaDetails.furniture}</p>
@@ -272,20 +272,20 @@ export default function InvestmentCard({
       </div>
 
       <div className="flex flex-col justify-between">
-        <div className="bg-black/30 rounded-2xl px-10 py-5 mb-4 text-center shadow-[0px_0px_15px_2px_rgba(255,255,255,0.2)]">
+        <div className="bg-black/30 shadow-[0px_0px_15px_2px_rgba(255,255,255,0.2)] mb-4 px-10 py-5 rounded-2xl text-center">
           <p className="text-lg">Remaining share:</p>
-          <p className="text-3xl font-bold mt-1">
+          <p className="mt-1 font-bold text-3xl">
             {remainingShare.toLocaleString()} DP
           </p>
         </div>
 
-        <div className="bg-black/30 rounded-2xl px-4 py-12 flex flex-col space-y-4 shadow-[0px_0px_15px_2px_rgba(255,255,255,0.2)]">
-          <div className="flex items-center bg-black/40 rounded-lg px-4 py-2 w-full overflow-hidden">
+        <div className="flex flex-col space-y-4 bg-black/30 shadow-[0px_0px_15px_2px_rgba(255,255,255,0.2)] px-4 py-12 rounded-2xl">
+          <div className="flex items-center bg-black/40 px-4 py-2 rounded-lg w-full overflow-hidden">
             <input
               type="number"
               step="0.01"
               placeholder="0.00"
-              className="bg-transparent outline-none text-white flex-1 min-w-0 placeholder-gray-400"
+              className="flex-1 bg-transparent min-w-0 text-white outline-none placeholder-gray-400"
               value={investmentAmount}
               onChange={(e) => setInvestmentAmount(e.target.value)}
             />
@@ -294,7 +294,7 @@ export default function InvestmentCard({
 
           <button
             onClick={handleInvest}
-            className="bg-white text-black font-semibold py-2 rounded-lg hover:bg-gray-200 shadow-[0px_0px_15px_2px_rgba(255,255,255,0.5)] transition"
+            className="bg-white hover:bg-gray-200 shadow-[0px_0px_15px_2px_rgba(255,255,255,0.5)] py-2 rounded-lg font-semibold text-black transition"
           >
             Invest
           </button>
