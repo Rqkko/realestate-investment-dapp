@@ -11,14 +11,14 @@ module.exports = async function (callback) {
     const factory = await ProjectFactory.deployed();
 
     // Transfer DP tokens from accounts[1-4] to accounts[8]
-    await dp.transfer(accounts[8], 10, { from: accounts[1] });
-    await dp.transfer(accounts[8], 50, { from: accounts[2] });
-    await dp.transfer(accounts[8], 30, { from: accounts[3] });
-    await dp.transfer(accounts[8], 10, { from: accounts[4] });
+    await dp.transfer(accounts[9], 10, { from: accounts[1] });
+    await dp.transfer(accounts[9], 50, { from: accounts[2] });
+    await dp.transfer(accounts[9], 30, { from: accounts[3] });
+    await dp.transfer(accounts[9], 10, { from: accounts[4] });
 
     // accounts[8] calls withdraw 100 DP for ETH from the vault
-    await dp.approve(vault.address, 100, { from: accounts[8] });
-    await vault.withdraw(100, { from: accounts[8] });
+    await dp.approve(vault.address, 100, { from: accounts[9] });
+    await vault.withdraw(100, { from: accounts[9] });
     console.log("DP withdrawn from the vault");
 
     callback();
