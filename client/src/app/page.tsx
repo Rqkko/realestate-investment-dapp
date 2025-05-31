@@ -48,12 +48,12 @@ export default function HomePage() {
           Explore Projects
         </button>
 
-        <button
+        {/* <button
           onClick={handleClick}
           className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-md text-lg text-white transition-colors"
         >
           Project Details
-        </button>
+        </button> */}
       </div>
     </div>
   );
