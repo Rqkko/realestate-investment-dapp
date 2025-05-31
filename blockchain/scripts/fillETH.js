@@ -3,8 +3,8 @@ module.exports = async function (callback) {
       const accounts = await web3.eth.getAccounts();
     
       // Define the sender and recipients
-      const sender = accounts[9];
-      const recipients = [accounts[1], accounts[2], accounts[3], accounts[4]];
+      const sender = accounts[7];
+      const recipients = [accounts[1], accounts[2], accounts[3], accounts[4], accounts[9]];
     
       // Target balance in Wei (100 ETH)
       const targetBalance = web3.utils.toWei('100', 'ether');
