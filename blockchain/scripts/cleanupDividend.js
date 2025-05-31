@@ -24,6 +24,6 @@ module.exports = async function (callback) {
     callback();
   } catch (err) {
     console.error("Error in script:", err);
-    callback(err);
+    // callback(err);
   }
 }

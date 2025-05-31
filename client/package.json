@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "setup-contracts": "cd ../blockchain && npm i && truffle migrate --reset && cd ../client && cp -r ../blockchain/build/contracts ./src/lib/",
-    "copy-contracts": "cp -r ../blockchain/build/contracts ./src/lib/"
+    "copy-contracts": "cp -r ../blockchain/build/contracts ./src/lib/",
+    "seed:projects": "cd ../blockchain && truffle exec scripts/createProjects.js",
+    "seed:investors": "cd ../blockchain && truffle exec scripts/fundAvana.js",
+    "seed:dividend": "cd ../blockchain && truffle exec scripts/distributeDividend.js",
+    "seed:cleanup": "cd ../blockchain && truffle exec scripts/cleanupDividend.js && truffle exec scripts/withdrawDP.js"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.7",
