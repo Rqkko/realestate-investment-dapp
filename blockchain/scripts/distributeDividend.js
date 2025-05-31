@@ -16,10 +16,13 @@ module.exports = async function (callback) {
     const project = await Project.at(projectAddress);
     console.log("'The Avana' deployed at:", project.address);
 
-    // Account 8 deposits 100 DP
-    await vault.deposit({ value: web3.utils.toWei("1", 'ether'), from: accounts[8] });
-    await dp.approve(project.address, 100, { from: accounts[8] })
-    await project.depositDP(100, { from: accounts[8] });
+    // Set project status to Completed
+    await project.setStatus(2);
+
+    // Account 9 deposits 100 DP
+    await vault.deposit({ value: web3.utils.toWei("1", 'ether'), from: accounts[9] });
+    await dp.approve(project.address, 100, { from: accounts[9] })
+    await project.depositDP(100, { from: accounts[9] });
 
     await project.distributeDividend(100)
     console.log("Dividend distributed");

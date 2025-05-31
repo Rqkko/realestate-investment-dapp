@@ -18,21 +18,21 @@ module.exports = async function (callback) {
     console.log("DP in project:", dpInProject.toString());
 
     // Investors sell stakes
-    await project.sellStake(1000, { from: accounts[1] });
+    // await project.sellStake(1000, { from: accounts[1] });
     await project.sellStake(5000, { from: accounts[2] });
     await project.sellStake(3000, { from: accounts[3] });
     await project.sellStake(1000, { from: accounts[4] });
     console.log("DP distributed to all investors");
 
     // Approve DP for the vault
-    await dp.approve(vault.address, 100, { from: accounts[1] });
+    // await dp.approve(vault.address, 100, { from: accounts[1] });
     await dp.approve(vault.address, 500, { from: accounts[2] });
     await dp.approve(vault.address, 300, { from: accounts[3] });
     await dp.approve(vault.address, 100, { from: accounts[4] });
     console.log("DP approved for the vault");
 
     // Withdraw DP from the vault
-    await vault.withdraw(100, { from: accounts[1] });
+    // await vault.withdraw(100, { from: accounts[1] });
     await vault.withdraw(500, { from: accounts[2] });
     await vault.withdraw(300, { from: accounts[3] });
     await vault.withdraw(100, { from: accounts[4] });
