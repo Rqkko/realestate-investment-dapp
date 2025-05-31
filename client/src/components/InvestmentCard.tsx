@@ -257,9 +257,6 @@ export default function InvestmentCard({
           {metaDetails.description}
         </p>
         <p>
-          <span className="font-semibold">Price per Unit:</span> $450,000
-        </p>
-        <p>
           <span className="font-semibold">Status:</span> {projectDetails.status}
         </p>
         <div className="mt-4">
