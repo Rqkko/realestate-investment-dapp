@@ -40,9 +40,9 @@ Click `Save`
 
 Select the Ganache network that you just created
 
-`Add Account` and import the first account from Ganache
+`Add Account` and import the second account from Ganache
 - Import using `Private Key`
-- To obtain the private key, click the key icon next to the first account, reveal the keys, and copy the private key.
+- To obtain the private key, click the key icon next to the second account (index=1), reveal the keys, and copy the private key.
 
 Make sure to select the account after import
 
