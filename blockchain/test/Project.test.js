@@ -2,17 +2,40 @@ const ProjectFactory = artifacts.require("ProjectFactory");
 const Project = artifacts.require("Project");
 const DP = artifacts.require("DP");
 const DPVault = artifacts.require("DPVault");
+const ProjectMetadata = artifacts.require("ProjectMetadata");
 
 contract("Project Integration", (accounts) => {
-  let factory, dp, vault, project, projectAddress;
+  let factory, dp, vault, project, projectAddress, metadata;
 
   before(async () => {
     factory = await ProjectFactory.deployed();
     dp = await DP.deployed();
     vault = await DPVault.deployed();
 
-    // Create a new project for testing
-    await factory.createProject('The Avana', 'A high-end condominium', 'Sukhumvit', 1000, { from: accounts[0] });
+    // Deploy ProjectMetadata for "The Avana"
+    metadata = await ProjectMetadata.new(
+      "The Avana",
+      "Avana Group",
+      "A high-end condominium",
+      "Sukhumvit",
+      2,
+      70,
+      "Fully furnished",
+      "Pool, Gym, Lounge"
+    );
+
+    // Create a new project for testing using the metadata contract address
+    await factory.createProject(
+      "The Avana",
+      "Avana Group",
+      "A high-end condominium",
+      "Sukhumvit",
+      2,
+      70,
+      "Fully furnished",
+      "Pool, Gym, Lounge",
+      1000,
+    );
     projectAddress = await factory.projects(0);
     project = await Project.at(projectAddress);
 
@@ -29,20 +52,21 @@ contract("Project Integration", (accounts) => {
   });
 
   it("should get project details", async () => {
-    const projectName = await project.name();
+    const meta = await ProjectMetadata.at(await project.projectMetadata());
+    const projectName = await meta.name();
     assert.equal(projectName, "The Avana", "Project name should be 'The Avana'");
 
     const amountNeeded = await project.amountNeeded();
-    assert.equal(amountNeeded.toString(), "1000", "Amount needed should be 10000 DP");
+    assert.equal(amountNeeded.toString(), "1000", "Amount needed should be 1000 DP");
   });
 
-  it("should allow investor to deposits ETH to DPVault and receives DP tokens", async () => {
-  await vault.deposit({ value: web3.utils.toWei("1", "ether"), from: accounts[1] });
+  it("should allow investor to deposit ETH to DPVault and receive DP tokens", async () => {
+    await vault.deposit({ value: web3.utils.toWei("1", "ether"), from: accounts[1] });
     const bal = await dp.balanceOf(accounts[1]);
     assert.equal(bal.toString(), "100", "Investor should receive 100 DP tokens");
   });
 
-  it("should allow investor to invests 100 DP into The Avana", async () => {
+  it("should allow investor to invest 100 DP into The Avana", async () => {
     await dp.approve(project.address, 100, { from: accounts[1] });
     await project.invest(100, { from: accounts[1] });
 
@@ -60,7 +84,7 @@ contract("Project Integration", (accounts) => {
 
   it("should check stake of investors", async () => {
     const stake = await project.stakes(accounts[1]);
-      assert.equal(stake.toString(), "1000", `Stake of investor should be 1000 (10%)`);
+    assert.equal(stake.toString(), "1000", `Stake of investor should be 1000 (10%)`);
   });
 
   it("should distribute dividends to investors", async () => {
@@ -93,7 +117,7 @@ contract("Project Integration", (accounts) => {
     const gasCost = gasUsed.mul(gasPrice);
     const finalEth = web3.utils.toBN(await web3.eth.getBalance(accounts[1]));
     const receivedEth = finalEth.sub(initialEth).add(gasCost);
-    assert.equal(receivedEth.toString(), web3.utils.toWei("1", "ether"), "Investor should receive 0.1 ETH for 10 DP tokens");
+    assert.equal(receivedEth.toString(), web3.utils.toWei("1", "ether"), "Investor should receive 1 ETH for 100 DP tokens");
     const bal = await dp.balanceOf(accounts[1]);
     assert.equal(bal.toString(), "0", "Investor DP balance should be 0 after withdrawal");
   });
